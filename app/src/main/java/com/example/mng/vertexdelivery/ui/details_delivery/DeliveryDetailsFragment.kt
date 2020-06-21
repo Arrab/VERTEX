@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.model.DeliveryModel
+import com.example.mng.vertexdelivery.model.PickUpModel
 import com.google.firebase.database.FirebaseDatabase
 import dmax.dialog.SpotsDialog
 import java.time.LocalDateTime
@@ -33,6 +34,7 @@ class DeliveryDetailsFragment : Fragment() {
     private var address_details: TextView? = null
     private var phone_details: TextView? = null
     private var date_details: TextView? = null
+    private var status_title: TextView? = null
     private var btn_done_details: Button? = null
 
     private var waitingDialog: AlertDialog? = null
@@ -73,12 +75,67 @@ class DeliveryDetailsFragment : Fragment() {
         address_details!!.text = StringBuilder(it!!.address!!)
         phone_details!!.text = StringBuilder(it!!.phone!!)
         date_details!!.text = StringBuilder(it!!.date.toString())
+        wichStatus(it)
         if (btnstatusModel!!.status == Common.STATUS_DONE)
             btn_done_details!!.isClickable = false
 
     }
 
+    private fun wichStatus(it: DeliveryModel) {
+        if (it.status == Common.STATUS_FREE){
+            status_title!!.setText(Common.txt_FREE)
+            status_title!!.setBackgroundColor(Common.COLOR_STATUS_FREE)
+        } else if (it.status == Common.STATUS_INPROGRESS){
+            status_title!!.setText(Common.txt_INPROGRESS)
+            status_title!!.setBackgroundColor(Common.COLOR_STATUS_INPROGRESS)
+        } else if (it.status == Common.STATUS_DONE){
+            status_title!!.setText(Common.txt_DONE)
+            status_title!!.setBackgroundColor(Common.COLOR_STATUS_DONE)
+        }
+    }
 
+    private fun setStatusBoton() {
+        if (btnstatusModel!!.status == Common.STATUS_FREE){
+            btn_done_details!!.setText(Common.txt_TAKE_IT)
+            btn_done_details!!.setBackgroundColor(Common.COLOR_STATUS_INPROGRESS)
+            btn_done_details!!.isClickable = true
+        } else if (btnstatusModel!!.status == Common.STATUS_INPROGRESS){
+            btn_done_details!!.setText(Common.txt_DONE)
+            btn_done_details!!.setBackgroundColor(Common.COLOR_STATUS_DONE)
+            btn_done_details!!.setTextColor(Color.BLACK)
+            btn_done_details!!.isClickable = true
+        }else if (btnstatusModel!!.status == Common.STATUS_DONE){
+            btn_done_details!!.setText(Common.txt_ITS_DONE)
+            btn_done_details!!.isClickable = false
+            btn_done_details!!.setBackgroundColor(Common.COLOR_STATUS_FINISHED)
+            btn_done_details!!.setTextColor(Color.BLACK)
+        }
+        wichStatus(btnstatusModel!!)
+    }
+
+    private fun wichStatusClicked(statusModel: DeliveryModel?, fecha: String) {
+        if (statusModel!!.status == Common.STATUS_FREE) {
+            statusModel!!.status = Common.STATUS_INPROGRESS
+            statusModel!!.dateOperation += "----. ${Common.STATUS_INPROGRESS}: ${fecha}"
+            statusModel!!.image = Common.IMG_DELIV_INPROGRESS
+            btn_done_details!!.setText(Common.txt_DONE)
+            btn_done_details!!.setBackgroundColor(Common.COLOR_STATUS_DONE)
+            btn_done_details!!.setTextColor(Color.BLACK)
+        } else if (statusModel!!.status == Common.STATUS_INPROGRESS) {
+            statusModel!!.status = Common.STATUS_DONE
+            statusModel!!.dateOperation += "--. ${Common.STATUS_DONE}: ${fecha}"
+            statusModel!!.image = Common.IMG_DELIV_DONE
+            btn_done_details!!.setText(Common.txt_ITS_DONE)
+            btn_done_details!!.isClickable = false
+            btn_done_details!!.setBackgroundColor(Common.COLOR_STATUS_FINISHED)
+            btn_done_details!!.setTextColor(Color.BLACK)
+        }
+        wichStatus(statusModel!!)
+        deliveryDetailsViewModel.setStatusModel(statusModel!!)
+    }
+
+
+    @SuppressLint("ResourceAsColor")
     private fun initViews(root: View?) {
         waitingDialog =
             SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
@@ -90,19 +147,10 @@ class DeliveryDetailsFragment : Fragment() {
         address_details = root!!.findViewById(R.id.address_details_delivery) as TextView
         phone_details = root!!.findViewById(R.id.phone_details_delivery) as TextView
         date_details = root!!.findViewById(R.id.date_details_delivery) as TextView
-        if (btnstatusModel!!.status == Common.STATUS_FREE){
-            btn_done_details!!.setText(Common.txt_FREE)
-            btn_done_details!!.setBackgroundColor(Color.BLUE)
-        } else if (btnstatusModel!!.status == Common.STATUS_INPROGRESS){
-            btn_done_details!!.setText(Common.txt_INPROGRESS)
-            btn_done_details!!.setBackgroundColor(Color.YELLOW)
-            btn_done_details!!.setTextColor(Color.BLACK)
-        }else if (btnstatusModel!!.status == Common.STATUS_DONE){
-            btn_done_details!!.setText(Common.txt_DONE)
-            btn_done_details!!.isClickable = false
-            btn_done_details!!.setBackgroundColor(Color.GREEN)
-            btn_done_details!!.setTextColor(Color.BLACK)
-        }
+        status_title = root!!.findViewById(R.id.txt_delivery_status_details)
+
+        setStatusBoton()
+        wichStatus(btnstatusModel!!)
 
         btn_done_details!!.setOnClickListener {
             showDialogStatus()
@@ -123,7 +171,7 @@ class DeliveryDetailsFragment : Fragment() {
         return formatter.format(currentTime).toString()
     }
 
-    @SuppressLint("NewApi")
+    @SuppressLint("NewApi", "ResourceAsColor")
     private fun showDialogStatus() {
         var builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Set Status of Task Delivery")
@@ -134,29 +182,10 @@ class DeliveryDetailsFragment : Fragment() {
         builder.setPositiveButton("OK") { dialogInterface, i ->
             val statusModel:DeliveryModel?= Common.deliverySelected
             val fecha = dateOfZone()
-            if (statusModel!!.status == Common.STATUS_FREE) {
-                statusModel!!.status = Common.STATUS_INPROGRESS
-                statusModel!!.dateOperation += "--. ${Common.STATUS_INPROGRESS}: ${fecha}"
-                statusModel!!.image = Common.IMG_DELIV_INPROGRESS
-                btn_done_details!!.setText(Common.txt_INPROGRESS)
-                btn_done_details!!.setBackgroundColor(Color.YELLOW)
-                btn_done_details!!.setTextColor(Color.BLACK)
-            } else if (statusModel!!.status == Common.STATUS_INPROGRESS) {
-                statusModel!!.status = Common.STATUS_DONE
-                statusModel!!.dateOperation += "--. ${Common.STATUS_DONE}: ${fecha}"
-                statusModel!!.image = Common.IMG_DELIV_DONE
-                btn_done_details!!.setText(Common.txt_DONE)
-                btn_done_details!!.isClickable = false
-                btn_done_details!!.setBackgroundColor(Color.GREEN)
-                btn_done_details!!.setTextColor(Color.BLACK)
-            }
-            deliveryDetailsViewModel.setStatusModel(statusModel!!)
+            wichStatusClicked(statusModel,fecha)
         }
         val dialog = builder.create()
         dialog.show()
-
-
-
     }
 
 
