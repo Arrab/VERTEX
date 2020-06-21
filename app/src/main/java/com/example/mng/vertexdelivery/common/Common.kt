@@ -1,17 +1,22 @@
 package com.example.mng.vertexdelivery.common
 
+import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
 import com.example.mng.vertexdelivery.model.UserModel
 import com.google.firebase.database.FirebaseDatabase
 
 object Common {
     var pickupSelected: PickUpModel? = null
+    var deliverySelected: DeliveryModel?= null
     val STATUS_DONE: String = "done"
     val STATUS_INPROGRESS: String = "inprogress"
     val STATUS_FREE: String = "free"
     val txt_DONE: String = "Done"
     val txt_INPROGRESS: String = "In Progress"
     val txt_FREE: String = "Free"
+    val IMG_DELIV_FREE: String = "https://firebasestorage.googleapis.com/v0/b/vertexdelivery-5c364.appspot.com/o/icons%2Fdelv_free.png?alt=media&token=366768b9-2648-44af-a7e5-e9541580611e"
+    val IMG_DELIV_INPROGRESS: String = "https://firebasestorage.googleapis.com/v0/b/vertexdelivery-5c364.appspot.com/o/icons%2Fdelev_progres.png?alt=media&token=2294180c-97be-4be9-b174-e24e542332ac"
+    val IMG_DELIV_DONE: String = "https://firebasestorage.googleapis.com/v0/b/vertexdelivery-5c364.appspot.com/o/icons%2Fdelv_done.png?alt=media&token=946e7ad9-e222-4bfe-bcfd-a27183188971"
     val IMG_PICKUP_DONE: String = "https://firebasestorage.googleapis.com/v0/b/vertexdelivery-5c364.appspot.com/o/icons%2Fpickup_done.png?alt=media&token=06a8e230-50db-470e-b74d-1914cce16def"
     val IMG_FREE: String = "https://firebasestorage.googleapis.com/v0/b/vertexdelivery-5c364.appspot.com/o/icons%2Fpickup_free.png?alt=media&token=bb7fab68-22e1-446c-a134-c5f5b534c60c"
     val IMG_PICKUP_INPROGRESS: String = "https://firebasestorage.googleapis.com/v0/b/vertexdelivery-5c364.appspot.com/o/icons%2Fpickup_progress.png?alt=media&token=c3f1bd90-7bf8-40d6-b6ff-4626b52b0b79"

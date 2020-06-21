@@ -20,7 +20,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <TextView
-                android:id="@+id/txt_pickup_details_description"
+                android:id="@+id/txt_delivery_details_description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_collapseMode="parallax"
@@ -56,7 +56,7 @@
                     android:orientation="vertical"
                     android:background="@color/colorSuave">
                     <TextView
-                        android:id="@+id/pickup_name_details"
+                        android:id="@+id/delivery_name_details"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -77,10 +77,10 @@
                             android:layout_weight="1"
                             android:src="@drawable/ic_baseline_access_time_24"/>
                         <TextView
-                            android:id="@+id/time_details_pickup"
+                            android:id="@+id/time_details_delivery"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                             android:layout_weight="9"
+                            android:layout_weight="9"
                             android:text="12:00"
                             android:fontFamily="@font/brandon_medium"
                             android:textColor="@color/colorBlue"
@@ -99,7 +99,7 @@
                             android:layout_weight="1"
                             android:src="@drawable/ic_baseline_address_24"/>
                         <TextView
-                            android:id="@+id/address_details_pickup"
+                            android:id="@+id/address_details_delivery"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="9"
@@ -122,7 +122,7 @@
                             android:layout_weight="1"
                             android:src="@drawable/ic_baseline_contact_phone_24"/>
                         <TextView
-                            android:id="@+id/phone_details_pickup"
+                            android:id="@+id/phone_details_delivery"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="9"
@@ -144,7 +144,7 @@
                             android:layout_weight="1"
                             android:src="@drawable/ic_baseline_date_range_24"/>
                         <TextView
-                            android:id="@+id/date_details_pickup"
+                            android:id="@+id/date_details_delivery"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="9"
@@ -159,7 +159,7 @@
 
             </androidx.cardview.widget.CardView>
             <Button
-                android:id="@+id/btn_status_details"
+                android:id="@+id/btn_status_details_delivery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"

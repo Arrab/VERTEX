@@ -19,8 +19,10 @@ import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.eventBus.CategoryClick
+import com.example.mng.vertexdelivery.eventBus.DeliveryItemClick
 import com.example.mng.vertexdelivery.eventBus.PickUpItemClick
 import com.example.mng.vertexdelivery.eventBus.PickUpMenuItemClick
+import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -91,6 +93,54 @@ class HomeActivity : AppCompatActivity() {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    fun onDeliveryItemClick(event:DeliveryItemClick){
+        if (event.deliveryCategoryModel != null){
+            dialog!!.show()
+            FirebaseDatabase.getInstance().getReference(Common.DELIVERY_REF).child(event.deliveryCategoryModel.package_id!!)
+                .addListenerForSingleValueEvent(object: ValueEventListener{
+                    override fun onCancelled(p0: DatabaseError) {
+                        dialog!!.dismiss()
+                        Toast.makeText(this@HomeActivity,"Error on HomeActivity ${p0.message}",Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onDataChange(p0: DataSnapshot) {
+                        if (p0.exists()){
+                            Common.deliverySelected = p0.getValue(DeliveryModel::class.java)
+                            FirebaseDatabase.getInstance()
+                                .getReference(Common.DELIVERY_REF)
+                                .child(event.deliveryCategoryModel.package_id!!)
+                                .addListenerForSingleValueEvent(object: ValueEventListener{
+                                    override fun onCancelled(p0: DatabaseError) {
+                                        Toast.makeText(this@HomeActivity,"Error on HomeActivity 1 ${p0.message}",Toast.LENGTH_SHORT).show()
+
+                                    }
+
+                                    override fun onDataChange(p0: DataSnapshot) {
+                                        if (p0.exists()){
+
+                                            Common.deliverySelected = p0.getValue(DeliveryModel::class.java)
+                                            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_delivery_details)
+
+
+                                        } else{
+                                            Toast.makeText(this@HomeActivity,"Error on HomeActivity 2 ${p0}",Toast.LENGTH_SHORT).show()
+                                        }
+                                        dialog!!.dismiss()
+                                    }
+
+
+                                })
+                        } else{
+                            dialog!!.dismiss()
+                            Toast.makeText(this@HomeActivity,"Error on HomeActivity 3 ${p0}",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                })
+        }
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onPickUpItemClick(event:PickUpItemClick){
         if(event.pickUpCategorModel != null){
             dialog!!.show()
@@ -117,7 +167,7 @@ class HomeActivity : AppCompatActivity() {
                                         if (p0.exists()){
 
                                             Common.pickupSelected = p0.getValue(PickUpModel::class.java)
-                                            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_pickup_list)
+                                            findNavController(R.id.nav_host_fragment).navigate(R.id.nav_pickup_details)
 
 
                                         } else{
