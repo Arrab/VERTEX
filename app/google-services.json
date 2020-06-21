@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "302895017264",
+    "firebase_url": "https://vertexdelivery-5c364.firebaseio.com",
+    "project_id": "vertexdelivery-5c364",
+    "storage_bucket": "vertexdelivery-5c364.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302895017264:android:6678dbdb769d82ec836cf5",
+        "android_client_info": {
+          "package_name": "com.example.mng.vertexdelivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302895017264-i2mu3evj0o71iusmkhgp50sk595g05dv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mng.vertexdelivery",
+            "certificate_hash": "10ac3a8fcf034bf1d359cea74a08a45155982daa"
+          }
+        },
+        {
+          "client_id": "302895017264-doo32r88d6h9jgmoh83k9mlgsrppp8su.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkI1rdOUMmzd4FwjNducY4_EWX_psWf20"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302895017264-doo32r88d6h9jgmoh83k9mlgsrppp8su.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

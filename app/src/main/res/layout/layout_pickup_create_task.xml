@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <EditText
+        android:id="@+id/txtName_pickup_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Name"
+        android:layout_margin="1dp"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/txtAddress_pickup_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Address"
+        android:layout_margin="1dp"
+        android:inputType="textPersonName"/>
+
+    <EditText
+        android:id="@+id/txtphone_pickup_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Phone"
+        android:layout_margin="1dp"
+        android:inputType="number"/>
+
+    <EditText
+        android:id="@+id/txtDescription_pickup_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Description"
+        android:layout_margin="1dp"
+        android:inputType="textLongMessage"/>
+    <EditText
+        android:id="@+id/txtTime_pickup_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Time"
+        android:layout_margin="1dp"
+        android:inputType="datetime"/>
+
+
+</LinearLayout>
