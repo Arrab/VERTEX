@@ -12,6 +12,10 @@
             android:id="@+id/nav_menu"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/pickup_categories"/>
+        <item
+            android:id="@+id/nav_m"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/pickup_categories"/>
 
     </group>
 </menu>
