@@ -4,14 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.callback.IRecycleItemClickListener
 import com.example.mng.vertexdelivery.common.Common
-import com.example.mng.vertexdelivery.eventBus.CategoryClick
+import com.example.mng.vertexdelivery.eventBus.PickUpMenuClick
 import com.example.mng.vertexdelivery.model.PickUpModel
 import org.greenrobot.eventbus.EventBus
 
@@ -62,7 +60,7 @@ class PickUpCategoriesAdapter(internal var context: Context, internal var pickUp
         holder.setListener(object :IRecycleItemClickListener{
             override fun onItemClick(view: View, pos: Int) {
                 Common.pickupSelected = pickUpCategoryList.get(pos)
-                EventBus.getDefault().postSticky(CategoryClick(true,pickUpCategoryList.get(pos)))
+                EventBus.getDefault().postSticky(PickUpMenuClick(true,pickUpCategoryList.get(pos)))
             }
 
         })

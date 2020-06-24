@@ -30,6 +30,14 @@ class MenuPickUpViewModel : ViewModel(), IMenuPickUpCallbackListener {
         messageError.value = message
     }
 
+    fun setCategoryList(statusModel: PickUpModel){
+        val list = mutableListOf<PickUpModel>()
+        list.addAll(categoriesListMutable!!.value!!)
+        if (categoriesListMutable != null)
+            list.add(statusModel!!)
+        categoriesListMutable!!.value = list
+    }
+
     fun getCategoryList(): MutableLiveData<List<PickUpModel>> {
         if (categoriesListMutable == null) {
             categoriesListMutable = MutableLiveData()

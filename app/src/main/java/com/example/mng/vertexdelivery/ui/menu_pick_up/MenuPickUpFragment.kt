@@ -48,23 +48,22 @@ class MenuPickUpFragment : Fragment() {
         menuViewModel =
             ViewModelProviders.of(this).get(MenuPickUpViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_pickup, container, false)
-
-
         initViews(root)
-
         menuViewModel.getMessageError().observe(viewLifecycleOwner, Observer {
             Toast.makeText(context, it, Toast.LENGTH_LONG).show()
         })
-
         menuViewModel.getCategoryList().observe(viewLifecycleOwner, Observer {
-            dialog.dismiss()
-            val adapter = PickUpCategoriesAdapter(requireContext(), it)
-            recycle_menu_pickup_var!!.adapter = adapter
-            recycle_menu_pickup_var!!.layoutAnimation = layoutAnimationController
-            Common.pickupSelected = it.get(0)
+           displayInfo(it)
         })
-
         return root
+    }
+
+    private fun displayInfo(it: List<PickUpModel>?) {
+        dialog.dismiss()
+        val adapter = PickUpCategoriesAdapter(requireContext(), it!!)
+        recycle_menu_pickup_var!!.adapter = adapter
+        recycle_menu_pickup_var!!.layoutAnimation = layoutAnimationController
+        Common.pickupSelected = it!!.get(0)
     }
 
     private fun initViews(root: View) {
@@ -141,7 +140,7 @@ class MenuPickUpFragment : Fragment() {
         builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
         builder.setPositiveButton("CREATE") { dialogInterface, i ->
             if (Common.pickupSelected == null) {
-                Toast.makeText(context,"Queeeeeeeeeeeeeeeeeeeeee",Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
             }
             val statusModel: PickUpModel?= Common.pickupSelected
             statusModel!!.dateOperation = formatter.format(currentTime).toString()
@@ -156,6 +155,11 @@ class MenuPickUpFragment : Fragment() {
             menuViewModel.setCreateModel(statusModel!!)
             menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
                 submitToFirebase(it)
+            })
+
+            menuViewModel.setCategoryList(statusModel)
+            menuViewModel.getCategoryList().observe(viewLifecycleOwner, Observer {
+                displayInfo(it)
             })
         }
         val dialog = builder.create()

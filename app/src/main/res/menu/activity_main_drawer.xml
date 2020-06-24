@@ -9,13 +9,13 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_menu"
-            android:icon="@drawable/ic_menu_gallery"
+            android:id="@+id/nav_pickup_menu"
+            android:icon="@drawable/ic_pick_up"
             android:title="@string/pickup_categories"/>
         <item
-            android:id="@+id/nav_m"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/pickup_categories"/>
+            android:id="@+id/nav_delivery_list"
+            android:icon="@drawable/ic_delivery_man"
+            android:title="@string/delivery_categories"/>
 
     </group>
 </menu>

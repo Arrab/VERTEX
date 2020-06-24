@@ -14,6 +14,7 @@ class PickUpDetailsViewModel : ViewModel() {
         mutableStatusLiveData = MutableLiveData()
     }
 
+
     fun getMutableLiveData(): MutableLiveData<PickUpModel> {
         if (mutableLiveData == null)
             mutableLiveData = MutableLiveData()

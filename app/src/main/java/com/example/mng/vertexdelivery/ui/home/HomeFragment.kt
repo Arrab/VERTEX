@@ -15,6 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.adapters.DeliveryAdapter
 import com.example.mng.vertexdelivery.adapters.PickUpAdapter
+import com.example.mng.vertexdelivery.common.Common
+import com.example.mng.vertexdelivery.model.DeliveryModel
+import com.example.mng.vertexdelivery.model.PickUpModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class HomeFragment : Fragment() {
 
@@ -27,6 +31,7 @@ class HomeFragment : Fragment() {
     var recyclerViewDeliv:RecyclerView?=null
 
     var layoutAnimationController: LayoutAnimationController?= null
+    private var boton_refresh:FloatingActionButton?=null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,19 +44,75 @@ class HomeFragment : Fragment() {
         initView(root)
         initViewDeliv(root)
         //Bin Data
-        homeViewModel.pickUpList.observe(viewLifecycleOwner, Observer {
-            val listData = it
-            val adapter = PickUpAdapter(requireContext(),listData)
-            recycleView!!.adapter = adapter
-            recycleView!!.layoutAnimation = layoutAnimationController
+        homeViewModel.getHomePickUpList().observe(viewLifecycleOwner, Observer {
+            displayPickUpInfo(it)
         })
-        homeViewModelDeliv.deliveryList.observe(viewLifecycleOwner, Observer {
-            val listDataDeliv = it
-            val adapterDeliv = DeliveryAdapter(requireContext(),listDataDeliv)
-            recyclerViewDeliv!!.adapter = adapterDeliv
-            recyclerViewDeliv!!.layoutAnimation = layoutAnimationController
+        homeViewModelDeliv.getHomeDeliveryList().observe(viewLifecycleOwner, Observer {
+            displayDeliveryInfo(it)
         })
+        boton_refresh = root.findViewById(R.id.btn_refresh)
+        boton_refresh!!.setOnClickListener {
+            refreshPickUpLista()
+            refreshDeliveryLista()
+            val statusListPickModel: List<PickUpModel>? = Common.pickupListSelected
+            val statusDelivModel: List<DeliveryModel>? = Common.deliveryListSelected
+            homeViewModel.setHomePickUpList(statusListPickModel!!)
+            homeViewModel.getHomePickUpList().observe(viewLifecycleOwner, Observer {
+                displayPickUpInfo(it)
+            })
+            homeViewModelDeliv.setHomeDeliveryList(statusDelivModel!!)
+            homeViewModelDeliv.getHomeDeliveryList().observe(viewLifecycleOwner, Observer {
+                displayDeliveryInfo(it)
+            })
+        }
+
         return root
+    }
+
+    private fun refreshDeliveryLista() {
+        val list = mutableListOf<DeliveryModel>()
+        val statusListDelivModel: List<DeliveryModel>? = Common.deliveryListSelected
+        val statusDelivModel: DeliveryModel?= Common.deliverySelected
+        if ((statusListDelivModel != null) && (statusDelivModel != null)) {
+            for (p0 in statusListDelivModel!!) {
+                if (p0!!.package_id == statusDelivModel!!.package_id) {
+                    list.add(statusDelivModel)
+                }else {
+                    list.add(p0)
+                }
+            }
+            Common.deliveryListSelected = list
+        }
+    }
+
+    private fun refreshPickUpLista() {
+        val list = mutableListOf<PickUpModel>()
+        val statusListPickModel: List<PickUpModel>? = Common.pickupListSelected
+        val statusPickModel: PickUpModel?= Common.pickupSelected
+        if ((statusListPickModel != null) && (statusPickModel != null)) {
+            for (p0 in statusListPickModel!!) {
+                if (p0!!.task_id == statusPickModel!!.task_id) {
+                    list.add(statusPickModel)
+                }else {
+                    list.add(p0)
+                }
+            }
+            Common.pickupListSelected = list
+        }
+    }
+
+    private fun displayPickUpInfo(it: List<PickUpModel>?) {
+        val listData = it
+        val adapter = PickUpAdapter(requireContext(),listData!!)
+        recycleView!!.adapter = adapter
+        recycleView!!.layoutAnimation = layoutAnimationController
+    }
+
+    private fun displayDeliveryInfo(it: List<DeliveryModel>?) {
+        val listDataDeliv = it
+        val adapterDeliv = DeliveryAdapter(requireContext(),listDataDeliv!!)
+        recyclerViewDeliv!!.adapter = adapterDeliv
+        recyclerViewDeliv!!.layoutAnimation = layoutAnimationController
     }
 
     private fun initView(root:View) {

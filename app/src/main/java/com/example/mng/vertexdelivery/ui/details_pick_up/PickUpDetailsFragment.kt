@@ -9,14 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.common.Common
+import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
 import dmax.dialog.SpotsDialog
 import java.time.LocalDateTime
@@ -35,9 +39,11 @@ class PickUpDetailsFragment : Fragment() {
     private var date_details: TextView? = null
     private var status_title: TextView? = null
     private var btn_done_details: Button? = null
+    private var btn_edit_description: FloatingActionButton? = null
 
     private var waitingDialog: AlertDialog? = null
     val btnstatusModel:PickUpModel?= Common.pickupSelected
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,8 +59,6 @@ class PickUpDetailsFragment : Fragment() {
             displayInfo(it)
         })
 
-
-
         return root
     }
 
@@ -68,6 +72,14 @@ class PickUpDetailsFragment : Fragment() {
         waitingDialog!!.dismiss()
     }
 
+    private fun submitToFirebaseDescription(it: PickUpModel?) {
+        waitingDialog!!.show()
+        val data = FirebaseDatabase.getInstance().getReference(Common.PICKUP_REF)
+        val data2 = data.child(Common.pickupSelected!!.task_id!!)
+        data2.child("description").setValue(it!!.description)
+        waitingDialog!!.dismiss()
+    }
+
     private fun displayInfo(it: PickUpModel?) {
         name_details!!.text = StringBuilder(it!!.name!!)
         time_details!!.text = StringBuilder(it!!.time!!)
@@ -76,8 +88,10 @@ class PickUpDetailsFragment : Fragment() {
         phone_details!!.text = StringBuilder(it!!.phone!!)
         date_details!!.text = StringBuilder(it!!.date.toString())
         wichStatus(it)
-        if (btnstatusModel!!.status == Common.STATUS_DONE)
+        if (btnstatusModel!!.status == Common.STATUS_DONE) {
             btn_done_details!!.isClickable = false
+            btn_edit_description!!.isClickable = false
+        }
 
     }
 
@@ -134,6 +148,7 @@ class PickUpDetailsFragment : Fragment() {
     }
 
 
+
     @SuppressLint("ResourceAsColor")
     private fun initViews(root: View?) {
         waitingDialog =
@@ -147,17 +162,48 @@ class PickUpDetailsFragment : Fragment() {
         phone_details = root!!.findViewById(R.id.phone_details_pickup) as TextView
         date_details = root!!.findViewById(R.id.date_details_pickup) as TextView
         status_title = root!!.findViewById(R.id.txt_pickup_status_details)
+        btn_edit_description = root!!.findViewById(R.id.btn_pickup_edit_description) as FloatingActionButton
 
         setStatusBoton()
         wichStatus(btnstatusModel!!)
+
         btn_done_details!!.setOnClickListener {
             showDialogStatus()
             pickupDetailsViewModel.getMutableStatusLiveData().observe(viewLifecycleOwner, Observer {
                 submitToFirebase(it)
             })
         }
+        btn_edit_description!!.setOnClickListener {
+            editPickupDescription()
+            pickupDetailsViewModel.getMutableStatusLiveData().observe(viewLifecycleOwner, Observer {
+                submitToFirebaseDescription(it)
+            })
+        }
+    }
+
+    private fun editPickupDescription() {
+        if (btnstatusModel!!.status != Common.STATUS_DONE) {
+            var builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Edit description")
+
+            val itemView =
+                LayoutInflater.from(context).inflate(R.layout.layout_pickup_edit_descrption, null)
+            var txt_description: EditText = itemView.findViewById(R.id.txt_pickup_edit_descrption)
+            txt_description.setText(btnstatusModel!!.description.toString())
+            builder.setView(itemView)
+            builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
+            builder.setPositiveButton("OK") { dialogInterface, i ->
+                val statusModel: PickUpModel? = Common.pickupSelected
+//                statusModel!!.description += "---.Text Edited on status: ${statusModel!!.status}:-- ${txt_description.toString()}"
+                statusModel!!.description = txt_description.text.toString()
+                pickupDetailsViewModel.setStatusModel(statusModel!!)
+            }
+            val dialog = builder.create()
+            dialog.show()
+        }
 
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun dateOfZone():String{

@@ -40,15 +40,17 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
     private var deliveryLoadCallbackListener: IDeliveryLoadCallback
 
     //PickUp
-    val pickUpList: LiveData<List<PickUpModel>>
-        get() {
-            if (pickUpListMutableLiveData == null) {
-                pickUpListMutableLiveData = MutableLiveData()
-                messageError = MutableLiveData()
-                loadPickUpList()
-            }
-            return pickUpListMutableLiveData!!
+    fun setHomePickUpList(statusModel: List<PickUpModel>){
+        if (pickUpListMutableLiveData != null)
+            pickUpListMutableLiveData!!.value = statusModel
+    }
+    fun getHomePickUpList(): MutableLiveData<List<PickUpModel>> {
+        if (pickUpListMutableLiveData == null) {
+            pickUpListMutableLiveData = MutableLiveData()
+            loadPickUpList()
         }
+        return pickUpListMutableLiveData!!
+    }
 
     private fun loadPickUpList() {
         val tempList = ArrayList<PickUpModel>()
@@ -60,30 +62,33 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
+                    tempList.clear()
                     for (itemSnapshot in snapshot!!.children) {
                         val model = itemSnapshot.getValue<PickUpModel>(PickUpModel::class.java)
                         if(model!!.task_id != "task_0") {
                             tempList.add(model!!)
                         }
                     }
+                    Common.pickupListSelected = tempList
                     pickUpLoadCallbackListener.onPickUpLoadSuccess(tempList)
-                }
-
             }
         })
     }
 
     //Delivery
-    val deliveryList: LiveData<List<DeliveryModel>>
-        get() {
-            if (deliveryListMutableLiveData == null) {
-                deliveryListMutableLiveData = MutableLiveData()
-                messageError = MutableLiveData()
-                loadDeliveryList()
-            }
-            return deliveryListMutableLiveData!!
+    fun setHomeDeliveryList(statusModel: List<DeliveryModel>){
+
+        if (deliveryListMutableLiveData != null)
+            deliveryListMutableLiveData!!.value = statusModel
+    }
+    fun getHomeDeliveryList(): MutableLiveData<List<DeliveryModel>> {
+        if (deliveryListMutableLiveData == null) {
+            deliveryListMutableLiveData = MutableLiveData()
+            loadDeliveryList()
         }
+        return deliveryListMutableLiveData!!
+    }
+
 
     private fun loadDeliveryList() {
         val tempListDelv = ArrayList<DeliveryModel>()
@@ -100,6 +105,7 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
                     if (modelDelv!!.package_id != "package_0")
                     tempListDelv.add(modelDelv!!)
                 }
+                Common.deliveryListSelected = tempListDelv
                 deliveryLoadCallbackListener.onDeliveryLoadSuccess(tempListDelv)
             }
 

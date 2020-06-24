@@ -14,6 +14,9 @@ object Common {
 
     var pickupSelected: PickUpModel? = null
     var deliverySelected: DeliveryModel?= null
+    var pickupListSelected: List<PickUpModel>? = null
+    var deliveryListSelected: List<DeliveryModel>?= null
+
 
     val STATUS_DONE: String = "done"
     val STATUS_INPROGRESS: String = "inprogress"

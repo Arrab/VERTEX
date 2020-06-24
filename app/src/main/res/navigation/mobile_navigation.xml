@@ -10,27 +10,24 @@
         android:name="com.example.mng.vertexdelivery.ui.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
-
     <fragment
-        android:id="@+id/nav_menu"
+        android:id="@+id/nav_pickup_menu"
         android:name="com.example.mng.vertexdelivery.ui.menu_pick_up.MenuPickUpFragment"
         android:label="@string/pickup_categories"
         tools:layout="@layout/fragment_pickup" />
-
     <fragment
         android:id="@+id/nav_pickup_details"
         android:name="com.example.mng.vertexdelivery.ui.details_pick_up.PickUpDetailsFragment"
         android:label="@string/menu_pickup_details"
         tools:layout="@layout/fragment_pickup_details" />
-
     <fragment
-        android:id="@+id/nav_pickup_list"
-        android:name="com.example.mng.vertexdelivery.ui.menu_pick_up.MenuPickUpFragment"
-        android:label="@string/pickup_categories"
-        tools:layout="@layout/fragment_pickup" />
+        android:id="@+id/nav_delivery_list"
+        android:name="com.example.mng.vertexdelivery.ui.menu_delivery.MenuDeliveryFragment"
+        android:label="@string/delivery_categories"
+        tools:layout="@layout/fragment_delivery" />
     <fragment
         android:id="@+id/nav_delivery_details"
         android:name="com.example.mng.vertexdelivery.ui.details_delivery.DeliveryDetailsFragment"
-        android:label="@string/pickup_categories"
+        android:label="@string/delivery_categories"
         tools:layout="@layout/fragment_delivery_details" />
 </navigation>

@@ -61,7 +61,16 @@
             </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
-
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:clickable="true"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_refresh_24"
+            android:tint="@color/colorPrimary"
+            android:onClick="refreshbtn"/>
     </LinearLayout>
 
 
