@@ -1,21 +1,20 @@
 package com.example.mng.vertexdelivery.ui.home
 
-import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mng.vertexdelivery.callback.IDeliveryLoadCallback
 import com.example.mng.vertexdelivery.callback.IPickUpLoadCallback
+import com.example.mng.vertexdelivery.callback.IUserLoadCallback
 import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
+import com.example.mng.vertexdelivery.model.UserModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
-class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
+class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, IUserLoadCallback {
 
     override fun onDeliveryLoadSuccess(deliveryModelList: List<DeliveryModel>) {
         deliveryListMutableLiveData!!.value = deliveryModelList
@@ -33,11 +32,21 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
         messageError.value = message
     }
 
+    override fun onUserLoadSuccess(userModelList: List<UserModel>) {
+        userListMutableLiveData!!.value =userModelList
+    }
+
+    override fun onUserLoadFaild(message: String) {
+        messageError.value = message
+    }
+
     private var deliveryListMutableLiveData: MutableLiveData<List<DeliveryModel>>? = null
     private var pickUpListMutableLiveData: MutableLiveData<List<PickUpModel>>? = null
+    private var userListMutableLiveData: MutableLiveData<List<UserModel>>? = null
     private lateinit var messageError: MutableLiveData<String>
     private var pickUpLoadCallbackListener: IPickUpLoadCallback
     private var deliveryLoadCallbackListener: IDeliveryLoadCallback
+    private var userLoadCallbaclListener: IUserLoadCallback
 
     //PickUp
     fun setHomePickUpList(statusModel: List<PickUpModel>){
@@ -51,7 +60,41 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
         }
         return pickUpListMutableLiveData!!
     }
+    fun setUserActual(userModel: List<UserModel>){
+        if (userListMutableLiveData != null)
+            userListMutableLiveData!!.value = userModel
+    }
 
+    fun getUserActual(): MutableLiveData<List<UserModel>>{
+        if (userListMutableLiveData == null){
+            userListMutableLiveData = MutableLiveData()
+            loadUserList()
+        }
+        return userListMutableLiveData!!
+    }
+
+    private fun loadUserList(){
+        val tempListUser = ArrayList<UserModel>()
+        val userRef = FirebaseDatabase.getInstance().getReference(Common.USER_REF)
+
+        userRef.addValueEventListener(object : ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                userLoadCallbaclListener.onUserLoadFaild(error.message!!)
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                tempListUser.clear()
+                for (itemSnapshot in snapshot!!.children) {
+                    val model = itemSnapshot.getValue<UserModel>(UserModel::class.java)
+                    if(model!!.user_id == Common.currentUser_id) {
+                        tempListUser.add(model!!)
+                    }
+                }
+                Common.currentUser = tempListUser.get(0)
+                userLoadCallbaclListener.onUserLoadSuccess(tempListUser)
+            }
+        })
+    }
     private fun loadPickUpList() {
         val tempList = ArrayList<PickUpModel>()
         val pickUpRef = FirebaseDatabase.getInstance().getReference(Common.PICKUP_REF)
@@ -94,12 +137,13 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
         val tempListDelv = ArrayList<DeliveryModel>()
         val deliveryRef = FirebaseDatabase.getInstance().getReference(Common.DELIVERY_REF)
 
-        deliveryRef.addListenerForSingleValueEvent(object : ValueEventListener{
+        deliveryRef.addValueEventListener(object : ValueEventListener{
             override fun onCancelled(p0: DatabaseError) {
                 deliveryLoadCallbackListener.onDeliveryLoadFaild(p0.message!!)
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+                tempListDelv.clear()
                 for (itemSanpshotDelv in p0!!.children) {
                     val modelDelv = itemSanpshotDelv.getValue<DeliveryModel>(DeliveryModel::class.java)
                     if (modelDelv!!.package_id != "package_0")
@@ -117,6 +161,7 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback {
 
         deliveryLoadCallbackListener = this
         pickUpLoadCallbackListener = this
+        userLoadCallbaclListener = this
     }
 
 

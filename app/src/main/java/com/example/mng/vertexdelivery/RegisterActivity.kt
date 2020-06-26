@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.example.mng.vertexdelivery.common.Common
+import com.example.mng.vertexdelivery.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -54,6 +55,7 @@ class RegisterActivity : AppCompatActivity() {
         val email:String = txtEmail.text.toString()
         val password:String = txtPassword.text.toString()
         val category:String = Common.USER_CATEGORY
+        var usr_model: UserModel?= null
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             progressBar.visibility = View.VISIBLE
@@ -72,7 +74,12 @@ class RegisterActivity : AppCompatActivity() {
                         userBD?.child("lastName")?.setValue(lastName)
                         userBD?.child("email")?.setValue(email)
                         userBD?.child("user_id")?.setValue(user?.uid)
-
+                        usr_model!!.name = name.toString()
+                        usr_model!!.category = category.toString()
+                        usr_model!!.lastName = lastName.toString()
+                        usr_model!!.email = email.toString()
+                        usr_model!!.user_id = user?.uid.toString()
+                        Common.currentUser = usr_model!!
                         action()
                     }
                 }

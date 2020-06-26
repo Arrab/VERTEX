@@ -1,16 +1,22 @@
 package com.example.mng.vertexdelivery.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mng.vertexdelivery.HomeActivity
+import com.example.mng.vertexdelivery.LoginActivity
 
 import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.adapters.DeliveryAdapter
@@ -19,11 +25,14 @@ import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeViewModelDeliv: HomeViewModel
+    private lateinit var homActivity: HomeActivity
+    private lateinit var userViewActual: HomeViewModel
 
 
     var recycleView:RecyclerView?=null
@@ -40,10 +49,19 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel =ViewModelProviders.of(this).get(HomeViewModel::class.java)
         homeViewModelDeliv= ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        userViewActual = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homActivity = HomeActivity()
         val root = inflater.inflate(R.layout.fragment_home, container, false)
+        //val root2 =inflater.inflate(R.layout.activity_home,container,false)
         initView(root)
         initViewDeliv(root)
+
         //Bin Data
+        userViewActual.getUserActual().observe(viewLifecycleOwner, Observer {
+            val intent = Intent(context, HomeActivity::class.java)
+            homActivity.CargarDatosUsuario(intent)
+        })
+
         homeViewModel.getHomePickUpList().observe(viewLifecycleOwner, Observer {
             displayPickUpInfo(it)
         })
@@ -68,6 +86,7 @@ class HomeFragment : Fragment() {
 
         return root
     }
+
 
     private fun refreshDeliveryLista() {
         val list = mutableListOf<DeliveryModel>()

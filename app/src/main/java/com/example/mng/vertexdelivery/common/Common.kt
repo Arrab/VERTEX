@@ -1,12 +1,22 @@
 package com.example.mng.vertexdelivery.common
 
 import android.graphics.Color
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.StyleSpan
+import android.widget.TextView
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
 import com.example.mng.vertexdelivery.model.UserModel
-import com.google.firebase.database.FirebaseDatabase
+import com.google.android.material.navigation.NavigationView
 
 object Common {
+
+
+
     val COLOR_STATUS_FREE: Int = Color.argb(100,24,90,251)
     val COLOR_STATUS_INPROGRESS: Int = Color.argb(100,255,140,1)
     val COLOR_STATUS_DONE: Int = Color.argb(100,70,251,77)
@@ -44,6 +54,25 @@ object Common {
 
     val USER_REF: String = "User"
     val USER_CATEGORY: String = "Admin"
+    var currentUser_id: String? = null
     var currentUser: UserModel? = null
+
+    var navlobal: NavigationView?= null
+    var navControl: NavController?= null
+    var navDrawer: DrawerLayout?= null
+
+    fun setSpanString(
+        s: String,
+        name: String?,
+        txtUser: TextView?
+    ) {
+        val builder = SpannableStringBuilder()
+        builder.append(s)
+        val txtSpannable = SpannableStringBuilder(name)
+        val boldSpan = StyleSpan(Typeface.BOLD)
+        txtSpannable.setSpan(boldSpan, 0,name!!.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.append(txtSpannable)
+        txtUser!!.setText(builder, TextView.BufferType.SPANNABLE)
+    }
 
 }

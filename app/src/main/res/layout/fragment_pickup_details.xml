@@ -55,8 +55,8 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-
     </com.google.android.material.appbar.AppBarLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_pickup_edit_description"
         android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                         android:fontFamily="@font/brandon_medium"
                         android:padding="12dp"
                         android:text="Name details"
-                        android:textColor="@color/colorBlue"
+                        android:textColor="@android:color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -115,7 +115,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_access_time_24" />
+                            android:src="@drawable/ic_baseline_access_time_24"
+                            android:tint="@android:color/black"/>
 
                         <TextView
                             android:id="@+id/time_details_pickup"
@@ -124,7 +125,7 @@
                             android:layout_weight="9"
                             android:fontFamily="@font/brandon_medium"
                             android:text="12:00"
-                            android:textColor="@color/colorBlue"
+                            android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -140,7 +141,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_address_24" />
+                            android:src="@drawable/ic_baseline_address_24"
+                            android:tint="@android:color/black"/>
 
                         <TextView
                             android:id="@+id/address_details_pickup"
@@ -149,7 +151,7 @@
                             android:layout_weight="9"
                             android:fontFamily="@font/brandon_medium"
                             android:text="Street"
-                            android:textColor="@color/colorBlue"
+                            android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -165,7 +167,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_contact_phone_24" />
+                            android:src="@drawable/ic_baseline_contact_phone_24"
+                            android:tint="@android:color/black"/>
 
                         <TextView
                             android:id="@+id/phone_details_pickup"
@@ -174,7 +177,7 @@
                             android:layout_weight="9"
                             android:fontFamily="@font/brandon_medium"
                             android:text="Contact"
-                            android:textColor="@color/colorBlue"
+                            android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -190,7 +193,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:src="@drawable/ic_baseline_date_range_24" />
+                            android:src="@drawable/ic_baseline_date_range_24"
+                            android:tint="@android:color/black"/>
 
                         <TextView
                             android:id="@+id/date_details_pickup"
@@ -199,7 +203,7 @@
                             android:layout_weight="9"
                             android:fontFamily="@font/brandon_medium"
                             android:text="Date"
-                            android:textColor="@color/colorBlue"
+                            android:textColor="@android:color/black"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 

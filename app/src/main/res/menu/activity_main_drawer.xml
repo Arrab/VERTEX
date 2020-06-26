@@ -3,15 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/home_group">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_home_24"
             android:title="@string/menu_home" />
+    </group>
+    <group android:id="@+id/pickup_group">
         <item
             android:id="@+id/nav_pickup_menu"
             android:icon="@drawable/ic_pick_up"
             android:title="@string/pickup_categories"/>
+    </group>
+    <group android:id="@+id/delivery_group">
         <item
             android:id="@+id/nav_delivery_list"
             android:icon="@drawable/ic_delivery_man"

@@ -2,17 +2,15 @@ package com.example.mng.vertexdelivery
 
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.Intent.getIntent
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
-import android.view.View
+import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -26,42 +24,49 @@ import com.example.mng.vertexdelivery.eventBus.PickUpMenuClick
 import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import dmax.dialog.SpotsDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var dialog: AlertDialog? = null
+    private lateinit var navController: NavController
+    private var drawer: DrawerLayout?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+
+
+
         dialog = SpotsDialog.Builder().setContext(this).setCancelable(false).build()
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        drawer = findViewById(R.id.drawer_layout)
+        Common.navDrawer = drawer
         val navView: NavigationView = findViewById(R.id.nav_view)
-        val navController = findNavController(R.id.nav_host_fragment)
+        Common.navlobal = navView
+        navController = findNavController(R.id.nav_host_fragment)
+        Common.navControl = navController
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_home, R.id.nav_pickup_menu, R.id.nav_delivery_list
-            ), drawerLayout
+            ), drawer
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-    }
 
+    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -75,6 +80,46 @@ class HomeActivity : AppCompatActivity() {
     }
 
     //Event
+    fun CargarDatosUsuario(intent: Intent) {
+        if (Common.currentUser != null) {
+            val navGlobal = Common.navlobal
+            val navControl = Common.navControl
+            val drwr = Common.navDrawer
+            var headerView = navGlobal!!.getHeaderView(0)
+            var txt_user_name = headerView.findViewById<TextView>(R.id.txt_user_name)
+            var txt_user_email = headerView.findViewById<TextView>(R.id.txt_user_email)
+
+            Common.setSpanString("Hey, ", Common.currentUser!!.name, txt_user_name)
+            Common.setSpanString("", Common.currentUser!!.email, txt_user_email)
+
+            navGlobal!!.setNavigationItemSelectedListener { item ->
+                item.isChecked = true
+                drwr!!.closeDrawers()
+                    if (item.itemId == R.id.nav_home){
+                        navControl!!.navigate(R.id.nav_home)
+                    } else
+                        if (item.itemId == R.id.nav_pickup_menu){
+                            navControl!!.navigate(R.id.nav_pickup_menu)
+                        } else
+                            if (item.itemId == R.id.nav_delivery_list){
+                                navControl!!.navigate(R.id.nav_delivery_list)
+                            }
+                true
+            }
+        }
+    }
+
+    private fun setCommonToNull() {
+        Common.navlobal = null
+        Common.navControl = null
+        Common.navDrawer = null
+        Common.currentUser = null
+        Common.currentUser_id = null
+        Common.pickupSelected= null
+        Common.deliverySelected= null
+        Common.pickupListSelected= null
+        Common.deliveryListSelected= null
+    }
 
     override fun onStart() {
         super.onStart()
@@ -133,7 +178,6 @@ class HomeActivity : AppCompatActivity() {
                                             "Error on HomeActivity 1 ${p0.message}",
                                             Toast.LENGTH_SHORT
                                         ).show()
-
                                     }
 
                                     override fun onDataChange(p0: DataSnapshot) {
@@ -141,6 +185,8 @@ class HomeActivity : AppCompatActivity() {
                                             Common.deliverySelected =
                                                 p0.getValue(DeliveryModel::class.java)
                                             findNavController(R.id.nav_host_fragment).navigate(R.id.nav_delivery_details)
+
+
                                         } else {
                                             Toast.makeText(
                                                 this@HomeActivity,
@@ -150,8 +196,6 @@ class HomeActivity : AppCompatActivity() {
                                         }
                                         dialog!!.dismiss()
                                     }
-
-
                                 })
                         } else {
                             dialog!!.dismiss()
@@ -162,11 +206,8 @@ class HomeActivity : AppCompatActivity() {
                             ).show()
                         }
                     }
-
                 })
-
         }
-
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -198,7 +239,6 @@ class HomeActivity : AppCompatActivity() {
                                             "Error on HomeActivity 1 ${p0.message}",
                                             Toast.LENGTH_SHORT
                                         ).show()
-
                                     }
 
                                     override fun onDataChange(p0: DataSnapshot) {

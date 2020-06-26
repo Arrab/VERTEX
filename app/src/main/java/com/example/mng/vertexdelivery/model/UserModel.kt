@@ -1,13 +1,11 @@
 package com.example.mng.vertexdelivery.model
 
 class UserModel {
-    val name:String?=null
-    val address:String?=null
-    val phone:String?=null
-    val time:String?=null
-    val statusFalse:String?=null
-    val imageText:String?=null
-    val task_id:String?=null
+    var name:String?=null
+    var email:String?=null
+    var category:String?=null
+    var lastName:String?=null
+    var user_id:String?=null
 
     constructor()
 

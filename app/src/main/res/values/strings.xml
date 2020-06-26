@@ -12,5 +12,7 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_pickup_details">Pick Up Details</string>
     <string name="pickup_categories">Pick Up</string>
+    <string name="sign_out">Sign Out</string>
     <string name="delivery_categories">Delivery</string>
+
 </resources>

@@ -4,11 +4,19 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.example.mng.vertexdelivery.common.Common
+import com.example.mng.vertexdelivery.model.DeliveryModel
+import com.example.mng.vertexdelivery.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
@@ -38,20 +46,24 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login(view:View){
-        action()
-       // loginUser()
+        //action()
+        loginUser()
     }
+
 
     private fun loginUser(){
         val user:String = txtUser.text.toString()
         val password:String = txtPassword.text.toString()
+        var usr_model: UserModel?= null
+
 
         if(!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)){
             progressBar.visibility = View.VISIBLE
-
             auth.signInWithEmailAndPassword(user,password).addOnCompleteListener(this){
                 task ->
                 if(task.isSuccessful){
+                    Common.currentUser_id = auth.uid.toString()
+
                     action()
                 } else {
                     Toast.makeText(this,"Access not allowed",Toast.LENGTH_LONG).show()

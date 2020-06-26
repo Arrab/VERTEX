@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
 import dmax.dialog.SpotsDialog
 import java.time.LocalDateTime
@@ -36,6 +38,7 @@ class DeliveryDetailsFragment : Fragment() {
     private var date_details: TextView? = null
     private var status_title: TextView? = null
     private var btn_done_details: Button? = null
+    private var btn_edit_description: FloatingActionButton? = null
 
     private var waitingDialog: AlertDialog? = null
     val btnstatusModel:DeliveryModel?= Common.deliverySelected
@@ -65,6 +68,14 @@ class DeliveryDetailsFragment : Fragment() {
         data2.child("status").setValue(it!!.status)
         data2.child("dateOperation").setValue(it!!.dateOperation)
         data2.child("image").setValue(it!!.image)
+        waitingDialog!!.dismiss()
+    }
+
+    private fun submitToFirebaseDescription(it: DeliveryModel?) {
+        waitingDialog!!.show()
+        val data = FirebaseDatabase.getInstance().getReference(Common.DELIVERY_REF)
+        val data2 = data.child(Common.deliverySelected!!.package_id!!)
+        data2.child("description").setValue(it!!.description)
         waitingDialog!!.dismiss()
     }
 
@@ -148,6 +159,7 @@ class DeliveryDetailsFragment : Fragment() {
         phone_details = root!!.findViewById(R.id.phone_details_delivery) as TextView
         date_details = root!!.findViewById(R.id.date_details_delivery) as TextView
         status_title = root!!.findViewById(R.id.txt_delivery_status_details)
+        btn_edit_description = root!!.findViewById(R.id.btn_delivery_edit_description) as FloatingActionButton
 
         setStatusBoton()
         wichStatus(btnstatusModel!!)
@@ -157,6 +169,36 @@ class DeliveryDetailsFragment : Fragment() {
             deliveryDetailsViewModel.getMutableStatusLiveData().observe(viewLifecycleOwner, Observer {
                 submitToFirebase(it)
             })
+        }
+        btn_edit_description!!.setOnClickListener {
+            editPickupDescription()
+            deliveryDetailsViewModel.getMutableStatusLiveData().observe(viewLifecycleOwner, Observer {
+                submitToFirebaseDescription(it)
+                displayInfo(it)
+            })
+        }
+
+    }
+
+    private fun editPickupDescription() {
+        if (btnstatusModel!!.status != Common.STATUS_DONE) {
+            var builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Edit description")
+
+            val itemView =
+                LayoutInflater.from(context).inflate(R.layout.layout_delivery_edit_description, null)
+            var txt_description: EditText = itemView.findViewById(R.id.txt_delivery_edit_descrption)
+            txt_description.setText(btnstatusModel!!.description.toString())
+            builder.setView(itemView)
+            builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
+            builder.setPositiveButton("OK") { dialogInterface, i ->
+                val statusModel: DeliveryModel? = Common.deliverySelected
+//                statusModel!!.description += "---.Text Edited on status: ${statusModel!!.status}:-- ${txt_description.toString()}"
+                statusModel!!.description = txt_description.text.toString()
+                deliveryDetailsViewModel.setStatusModel(statusModel!!)
+            }
+            val dialog = builder.create()
+            dialog.show()
         }
 
     }

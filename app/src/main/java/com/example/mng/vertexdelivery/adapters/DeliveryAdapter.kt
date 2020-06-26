@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.EventBus
 
 class DeliveryAdapter (internal var context: Context, internal var deliveryCategoryModels: List<DeliveryModel>):
 RecyclerView.Adapter<DeliveryAdapter.MyViewHolder>(){
+
     inner class MyViewHolder(itemView:View):RecyclerView.ViewHolder(itemView),
     View.OnClickListener{
 
