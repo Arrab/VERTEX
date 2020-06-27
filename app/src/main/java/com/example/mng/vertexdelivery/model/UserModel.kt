@@ -8,5 +8,19 @@ class UserModel {
     var user_id:String?=null
 
     constructor()
+    constructor(
+        name: String?,
+        email: String?,
+        category: String?,
+        lastName: String?,
+        user_id: String?
+    ) {
+        this.name = name
+        this.email = email
+        this.category = category
+        this.lastName = lastName
+        this.user_id = user_id
+    }
+
 
 }

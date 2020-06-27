@@ -63,7 +63,7 @@ class MenuPickUpFragment : Fragment() {
         val adapter = PickUpCategoriesAdapter(requireContext(), it!!)
         recycle_menu_pickup_var!!.adapter = adapter
         recycle_menu_pickup_var!!.layoutAnimation = layoutAnimationController
-        Common.pickupSelected = it!!.get(0)
+        //Common.pickupSelected = it!!.get(0)
     }
 
     private fun initViews(root: View) {
@@ -98,7 +98,7 @@ class MenuPickUpFragment : Fragment() {
             }
             override fun onDataChange(p0: DataSnapshot) {
                 count = p0.childrenCount
-                it!!.task_id = "task_${count}"
+                it!!.task_id = count.toString()
                 val data2 = pickUpRef.child(it!!.task_id!!)
                 data2.child("address").setValue(it!!.address)
                 data2.child("date").setValue(it!!.date)
@@ -139,10 +139,10 @@ class MenuPickUpFragment : Fragment() {
         builder.setView(itemView)
         builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
         builder.setPositiveButton("CREATE") { dialogInterface, i ->
-            if (Common.pickupSelected == null) {
-                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
-            }
-            val statusModel: PickUpModel?= Common.pickupSelected
+//            if (Common.pickupSelected == null) {
+//                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
+//            }
+            val statusModel: PickUpModel?= PickUpModel()
             statusModel!!.dateOperation = formatter.format(currentTime).toString()
             statusModel!!.date = formatter2.format(currentTime).toString()
             statusModel!!.status = Common.STATUS_FREE
@@ -152,6 +152,7 @@ class MenuPickUpFragment : Fragment() {
             statusModel!!.name = txtName_create!!.text.toString().toUpperCase()
             statusModel!!.phone = txtPhone_create!!.text.toString()
             statusModel!!.time = txtTime_create!!.text.toString()
+            Common.pickupSelected = statusModel
             menuViewModel.setCreateModel(statusModel!!)
             menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
                 submitToFirebase(it)

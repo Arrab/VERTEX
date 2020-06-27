@@ -26,6 +26,7 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var dbReference: DatabaseReference
     private lateinit var database: FirebaseDatabase
     private lateinit var auth: FirebaseAuth
+    private var usr_model: UserModel = UserModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +56,6 @@ class RegisterActivity : AppCompatActivity() {
         val email:String = txtEmail.text.toString()
         val password:String = txtPassword.text.toString()
         val category:String = Common.USER_CATEGORY
-        var usr_model: UserModel?= null
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             progressBar.visibility = View.VISIBLE
@@ -67,7 +67,6 @@ class RegisterActivity : AppCompatActivity() {
                     if(task.isComplete){
                         val user: FirebaseUser?= auth.currentUser
                         verifyEmail(user)
-
                         val userBD = user?.uid?.let { dbReference.child(it) }
                         userBD?.child("category")?.setValue(category)
                         userBD?.child("name")?.setValue(name)

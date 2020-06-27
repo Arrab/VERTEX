@@ -108,7 +108,7 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
                     tempList.clear()
                     for (itemSnapshot in snapshot!!.children) {
                         val model = itemSnapshot.getValue<PickUpModel>(PickUpModel::class.java)
-                        if(model!!.task_id != "task_0") {
+                        if(model!!.task_id != "0") {
                             tempList.add(model!!)
                         }
                     }
@@ -146,7 +146,7 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
                 tempListDelv.clear()
                 for (itemSanpshotDelv in p0!!.children) {
                     val modelDelv = itemSanpshotDelv.getValue<DeliveryModel>(DeliveryModel::class.java)
-                    if (modelDelv!!.package_id != "package_0")
+                    if (modelDelv!!.package_id != "0")
                     tempListDelv.add(modelDelv!!)
                 }
                 Common.deliveryListSelected = tempListDelv

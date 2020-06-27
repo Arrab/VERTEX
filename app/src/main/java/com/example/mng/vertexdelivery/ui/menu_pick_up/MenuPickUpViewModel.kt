@@ -62,7 +62,7 @@ class MenuPickUpViewModel : ViewModel(), IMenuPickUpCallbackListener {
                 var position: Int = 0
                 for (itemSanpshot in p0!!.children) {
                     val model = itemSanpshot.getValue<PickUpModel>(PickUpModel::class.java)
-                    if (model!!.task_id != "task_0")
+                    if (model!!.task_id != "0")
                         tempListPickUp.add(model!!)
                 }
                 menuPickUpCallbackListener.onMenuPickUpLoadSuccess(tempListPickUp)

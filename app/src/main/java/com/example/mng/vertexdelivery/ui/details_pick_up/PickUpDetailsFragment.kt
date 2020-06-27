@@ -177,6 +177,7 @@ class PickUpDetailsFragment : Fragment() {
             editPickupDescription()
             pickupDetailsViewModel.getMutableStatusLiveData().observe(viewLifecycleOwner, Observer {
                 submitToFirebaseDescription(it)
+                displayInfo(it)
             })
         }
     }
