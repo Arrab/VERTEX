@@ -61,7 +61,7 @@ class MenuDeliveryFragment : Fragment() {
         val adapter = DeliveryCategoryAdapter(requireContext(), it!!)
         recycle_menu_delivery_var!!.adapter = adapter
         recycle_menu_delivery_var!!.layoutAnimation = layoutAnimationController
-        Common.deliverySelected = it!!.get(0)
+        //Common.deliverySelected = it!!.get(0)
     }
 
 
@@ -96,7 +96,7 @@ class MenuDeliveryFragment : Fragment() {
             }
             override fun onDataChange(p0: DataSnapshot) {
                 count = p0.childrenCount
-                it!!.package_id = "package_${count}"
+                it!!.package_id = count.toString()
                 val data2 = delivpRef.child(it!!.package_id!!)
                 data2.child("address").setValue(it!!.address)
                 data2.child("date").setValue(it!!.date)
@@ -135,10 +135,10 @@ class MenuDeliveryFragment : Fragment() {
         builder.setView(itemView)
         builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
         builder.setPositiveButton("CREATE") { dialogInterface, i ->
-            if (Common.deliverySelected == null) {
-                Toast.makeText(context,"Error on creating delivery",Toast.LENGTH_SHORT).show()
-            }
-            val statusModel: DeliveryModel?= Common.deliverySelected
+//            if (Common.deliverySelected == null) {
+//                Toast.makeText(context,"Error on creating delivery",Toast.LENGTH_SHORT).show()
+//            }
+            val statusModel: DeliveryModel?= DeliveryModel()
             statusModel!!.dateOperation = formatter.format(currentTime).toString()
             statusModel!!.date = formatter2.format(currentTime).toString()
             statusModel!!.status = Common.STATUS_FREE
@@ -148,6 +148,7 @@ class MenuDeliveryFragment : Fragment() {
             statusModel!!.name = txtName_create!!.text.toString().toUpperCase()
             statusModel!!.phone = txtPhone_create!!.text.toString()
             statusModel!!.time = txtTime_create!!.text.toString()
+            Common.deliverySelected = statusModel
             menuViewModel.setCreateModel(statusModel!!)
             menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
                 submitToFirebase(it)

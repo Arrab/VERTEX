@@ -63,7 +63,7 @@ class MenuDeliveryViewModel : ViewModel(), IMenuDeliveryCallbackListener {
                 var position: Int = 0
                 for (itemSanpshot in p0!!.children) {
                     val model = itemSanpshot.getValue<DeliveryModel>(DeliveryModel::class.java)
-                    if (model!!.package_id != "package_0")
+                    if (model!!.package_id != "0")
                         tempListDeliv.add(model!!)
                 }
                 menuDeliveryCallbackListener.onMenuDeliveryLoadSuccess(tempListDeliv)

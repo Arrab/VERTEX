@@ -81,8 +81,6 @@ class MenuPickUpFragment : Fragment() {
         recycle_menu_pickup_var!!.layoutManager = layoutManager
         recycle_menu_pickup_var!!.addItemDecoration(SpacesItemDecoration(8))
 
-
-
         btn_create!!.setOnClickListener {
             showDialogStatus(root)
         }
