@@ -49,8 +49,8 @@ object Common {
     val DEFAULT_COLUMN_COUNT: Int = 0
     val FULL_WIDTH_COLUMN: Int = 1
 
-    val PICKUP_REF: String = "PickUp"
-    val DELIVERY_REF: String = "Delivery"
+    val PICKUP_REF: String = "PickUpDevelop"
+    val DELIVERY_REF: String = "DeliveryDevelop"
 
     val USER_REF: String = "User"
     val USER_CATEGORY: String = "Admin"
