@@ -3,10 +3,11 @@ package com.example.mng.vertexdelivery.model
 class DeliveryModel {
 
     var package_id:String?= null
-    var name: String? = null
+    var invoiceNumber: String?= null
+    var shipper: String? = null
     var phone: String? = null
     var address: String? = null
-    var time: String? = null
+    var endClientName: String? = null
     var status: String? = null
     var image: String? = null
     var description: String? = null
@@ -16,10 +17,11 @@ class DeliveryModel {
     constructor()
     constructor(
         package_id: String?,
-        name: String?,
+        invoiceNummber: String?,
+        shipper: String?,
         phone: String?,
         address: String?,
-        time: String?,
+        endClientName: String?,
         status: String?,
         image: String?,
         description: String?,
@@ -27,10 +29,11 @@ class DeliveryModel {
         dateOperation: String?
     ) {
         this.package_id = package_id
-        this.name = name
+        this.invoiceNumber = invoiceNummber
+        this.shipper = shipper
         this.phone = phone
         this.address = address
-        this.time = time
+        this.endClientName = endClientName
         this.status = status
         this.image = image
         this.description = description
@@ -45,10 +48,11 @@ class DeliveryModel {
         other as DeliveryModel
 
         if (package_id != other.package_id) return false
-        if (name != other.name) return false
+        if (invoiceNumber != other.invoiceNumber) return false
+        if (shipper != other.shipper) return false
         if (phone != other.phone) return false
         if (address != other.address) return false
-        if (time != other.time) return false
+        if (endClientName != other.endClientName) return false
         if (status != other.status) return false
         if (image != other.image) return false
         if (description != other.description) return false
@@ -60,10 +64,11 @@ class DeliveryModel {
 
     override fun hashCode(): Int {
         var result = package_id?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + (invoiceNumber?.hashCode() ?: 0)
+        result = 31 * result + (shipper?.hashCode() ?: 0)
         result = 31 * result + (phone?.hashCode() ?: 0)
         result = 31 * result + (address?.hashCode() ?: 0)
-        result = 31 * result + (time?.hashCode() ?: 0)
+        result = 31 * result + (endClientName?.hashCode() ?: 0)
         result = 31 * result + (status?.hashCode() ?: 0)
         result = 31 * result + (image?.hashCode() ?: 0)
         result = 31 * result + (description?.hashCode() ?: 0)
@@ -73,7 +78,7 @@ class DeliveryModel {
     }
 
     override fun toString(): String {
-        return "DeliveryModel(package_id=$package_id, name=$name, phone=$phone, address=$address, time=$time, status=$status, image=$image, description=$description, date=$date, dateOperation=$dateOperation)"
+        return "DeliveryModel(package_id=$package_id, invoiceNummber=$invoiceNumber, shipper=$shipper, phone=$phone, address=$address, endClientName=$endClientName, status=$status, image=$image, description=$description, date=$date, dateOperation=$dateOperation)"
     }
 
 

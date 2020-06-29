@@ -1,5 +1,7 @@
 package com.example.mng.vertexdelivery.ui.menu_pick_up
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mng.vertexdelivery.callback.IMenuPickUpCallbackListener
@@ -9,6 +11,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MenuPickUpViewModel : ViewModel(), IMenuPickUpCallbackListener {
 
@@ -58,12 +62,27 @@ class MenuPickUpViewModel : ViewModel(), IMenuPickUpCallbackListener {
                 menuPickUpCallbackListener.onMenuPickUpLoadFaild(p0.message!!)
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(p0: DataSnapshot) {
+                tempListPickUp.clear()
                 var position: Int = 0
                 for (itemSanpshot in p0!!.children) {
                     val model = itemSanpshot.getValue<PickUpModel>(PickUpModel::class.java)
-                    if (model!!.task_id != "0")
-                        tempListPickUp.add(model!!)
+                    if (model!!.task_id != "0") {
+                        val dateSt = model!!.date
+                        val df = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                        val date = LocalDate.parse(dateSt, df)
+                        val day = date.dayOfYear
+                        val currentDate =
+                            LocalDate.parse(LocalDate.now().toString(), DateTimeFormatter.ISO_DATE)
+                        val dayNow = currentDate.dayOfYear
+                        if (model!!.status == Common.STATUS_DONE) {
+                            if (day == dayNow)
+                                tempListPickUp.add(model!!)
+                        } else {
+                            tempListPickUp.add(model!!)
+                        }
+                    }
                 }
                 menuPickUpCallbackListener.onMenuPickUpLoadSuccess(tempListPickUp)
             }

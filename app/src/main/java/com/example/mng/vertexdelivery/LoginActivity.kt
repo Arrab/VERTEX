@@ -63,10 +63,10 @@ class LoginActivity : AppCompatActivity() {
                 task ->
                 if(task.isSuccessful){
                     Common.currentUser_id = auth.uid.toString()
-
                     action()
                 } else {
                     Toast.makeText(this,"Access not allowed",Toast.LENGTH_LONG).show()
+                    startActivity(Intent(this,LoginActivity::class.java))
                 }
             }
         } else{

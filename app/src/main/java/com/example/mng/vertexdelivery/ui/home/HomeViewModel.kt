@@ -1,5 +1,7 @@
 package com.example.mng.vertexdelivery.ui.home
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mng.vertexdelivery.callback.IDeliveryLoadCallback
@@ -13,6 +15,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, IUserLoadCallback {
 
@@ -104,12 +109,27 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
                 pickUpLoadCallbackListener.onPickUpLoadFaild(error.message!!)
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(snapshot: DataSnapshot) {
                     tempList.clear()
                     for (itemSnapshot in snapshot!!.children) {
                         val model = itemSnapshot.getValue<PickUpModel>(PickUpModel::class.java)
-                        if(model!!.task_id != "0") {
-                            tempList.add(model!!)
+                        if (model!!.task_id != null){
+                            if(model!!.task_id != "0") {
+                                val dateSt = model!!.date
+                                val df=DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                                val date = LocalDate.parse(dateSt, df)
+                                val day = date.dayOfYear
+                                val currentDate = LocalDate.parse(LocalDate.now().toString(), DateTimeFormatter.ISO_DATE)
+                                val dayNow = currentDate.dayOfYear
+                                if (model!!.status == Common.STATUS_DONE){
+                                    if (day == dayNow)
+                                        tempList.add(model!!)
+                                } else {
+                                    tempList.add(model!!)
+                                }
+
+                            }
                         }
                     }
                     Common.pickupListSelected = tempList
@@ -142,12 +162,31 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
                 deliveryLoadCallbackListener.onDeliveryLoadFaild(p0.message!!)
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(p0: DataSnapshot) {
                 tempListDelv.clear()
                 for (itemSanpshotDelv in p0!!.children) {
                     val modelDelv = itemSanpshotDelv.getValue<DeliveryModel>(DeliveryModel::class.java)
-                    if (modelDelv!!.package_id != "0")
-                    tempListDelv.add(modelDelv!!)
+                    if (modelDelv!!.package_id != null) {
+                        if (modelDelv!!.package_id != "0") {
+                            val dateSt = modelDelv!!.date
+                            val df = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                            val date = LocalDate.parse(dateSt, df)
+                            val day = date.dayOfYear
+                            val currentDate =
+                                LocalDate.parse(
+                                    LocalDate.now().toString(),
+                                    DateTimeFormatter.ISO_DATE
+                                )
+                            val dayNow = currentDate.dayOfYear
+                            if (modelDelv!!.status == Common.STATUS_DONE) {
+                                if (day == dayNow)
+                                    tempListDelv.add(modelDelv!!)
+                            } else {
+                                tempListDelv.add(modelDelv!!)
+                            }
+                        }
+                    }
                 }
                 Common.deliveryListSelected = tempListDelv
                 deliveryLoadCallbackListener.onDeliveryLoadSuccess(tempListDelv)

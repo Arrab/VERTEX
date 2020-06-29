@@ -19,9 +19,7 @@ class DeliveryCategoryAdapter(internal var context: Context, internal var delive
     inner class MyViewHolder(itemView: View): RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
-        var delivery_category_name: TextView?= null
-
-        var delivery_category_time: TextView?= null
+        var delivery_category_invoice: TextView?= null
 
         internal var listener: IRecycleItemClickListener?= null
 
@@ -30,8 +28,7 @@ class DeliveryCategoryAdapter(internal var context: Context, internal var delive
         }
 
         init {
-            delivery_category_name = itemView.findViewById(R.id.txt_delivery_menu_name) as TextView
-            delivery_category_time = itemView.findViewById(R.id.txt_delivery_menu_time) as TextView
+            delivery_category_invoice = itemView.findViewById(R.id.txt_delivery_menu_invoice) as TextView
             itemView.setOnClickListener(this)
         }
 
@@ -49,8 +46,7 @@ class DeliveryCategoryAdapter(internal var context: Context, internal var delive
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.delivery_category_name!!.setText(deliveryCategoryList.get(position).name)
-        holder.delivery_category_time!!.setText(deliveryCategoryList.get(position).time)
+        holder.delivery_category_invoice!!.setText(deliveryCategoryList.get(position).invoiceNumber)
 
         //Event
         holder.setListener(object : IRecycleItemClickListener {

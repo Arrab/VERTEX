@@ -1,5 +1,7 @@
 package com.example.mng.vertexdelivery.ui.menu_delivery
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mng.vertexdelivery.callback.IMenuDeliveryCallbackListener
@@ -10,6 +12,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class MenuDeliveryViewModel : ViewModel(), IMenuDeliveryCallbackListener {
 
@@ -59,12 +64,27 @@ class MenuDeliveryViewModel : ViewModel(), IMenuDeliveryCallbackListener {
                 menuDeliveryCallbackListener.onMenuDeliveryLoadFaild(p0.message!!)
             }
 
+            @RequiresApi(Build.VERSION_CODES.O)
             override fun onDataChange(p0: DataSnapshot) {
+                tempListDeliv.clear()
                 var position: Int = 0
                 for (itemSanpshot in p0!!.children) {
                     val model = itemSanpshot.getValue<DeliveryModel>(DeliveryModel::class.java)
-                    if (model!!.package_id != "0")
-                        tempListDeliv.add(model!!)
+                    if (model!!.package_id != "0") {
+                        val dateSt = model!!.date
+                        val df = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+                        val date = LocalDate.parse(dateSt, df)
+                        val day = date.dayOfYear
+                        val currentDate =
+                            LocalDate.parse(LocalDate.now().toString(), DateTimeFormatter.ISO_DATE)
+                        val dayNow = currentDate.dayOfYear
+                        if (model!!.status == Common.STATUS_DONE) {
+                            if (day == dayNow)
+                                tempListDeliv.add(model!!)
+                        } else {
+                            tempListDeliv.add(model!!)
+                        }
+                    }
                 }
                 menuDeliveryCallbackListener.onMenuDeliveryLoadSuccess(tempListDeliv)
             }

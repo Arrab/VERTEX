@@ -5,13 +5,31 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/txtName_delivery_create_task"
+        android:id="@+id/txt_shipper_delivery_create_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Name"
+        android:hint="Shipper"
         android:layout_margin="1dp"
         android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/txt_invoice_delivery_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Invoice Number"
+        android:layout_margin="1dp"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/txt_end_client_delivery_create_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Name of end Client"
+        android:layout_margin="1dp"
+        android:inputType="textPersonName"/>
 
     <EditText
         android:id="@+id/txtAddress_delivery_create_task"
@@ -39,13 +57,6 @@
         android:hint="Description"
         android:layout_margin="1dp"
         android:inputType="textLongMessage"/>
-    <EditText
-        android:id="@+id/txtTime_delivery_create_task"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Time"
-        android:layout_margin="1dp"
-        android:inputType="datetime"/>
+
 
 </LinearLayout>

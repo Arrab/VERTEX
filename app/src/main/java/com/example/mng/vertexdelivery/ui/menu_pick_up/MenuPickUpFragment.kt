@@ -3,6 +3,7 @@ package com.example.mng.vertexdelivery.ui.menu_pick_up
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -140,26 +141,33 @@ class MenuPickUpFragment : Fragment() {
 //            if (Common.pickupSelected == null) {
 //                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
 //            }
-            val statusModel: PickUpModel?= PickUpModel()
-            statusModel!!.dateOperation = formatter.format(currentTime).toString()
-            statusModel!!.date = formatter2.format(currentTime).toString()
-            statusModel!!.status = Common.STATUS_FREE
-            statusModel!!.address = txtAddress_create!!.text.toString()
-            statusModel!!.description = txtDescriptio_create!!.text.toString()
-            statusModel!!.image = Common.IMG_FREE
-            statusModel!!.name = txtName_create!!.text.toString().toUpperCase()
-            statusModel!!.phone = txtPhone_create!!.text.toString()
-            statusModel!!.time = txtTime_create!!.text.toString()
-            Common.pickupSelected = statusModel
-            menuViewModel.setCreateModel(statusModel!!)
-            menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
-                submitToFirebase(it)
-            })
+            if (!TextUtils.isEmpty(txtName_create.text.toString()) && !TextUtils.isEmpty(txtTime_create.text.toString())
+                && !TextUtils.isEmpty(txtAddress_create.text.toString()) && !TextUtils.isEmpty(txtPhone_create.text.toString())
+                && !TextUtils.isEmpty(txtDescriptio_create.text.toString())) {
 
-            menuViewModel.setCategoryList(statusModel)
-            menuViewModel.getCategoryList().observe(viewLifecycleOwner, Observer {
-                displayInfo(it)
-            })
+                val statusModel: PickUpModel? = PickUpModel()
+                statusModel!!.dateOperation = formatter.format(currentTime).toString()
+                statusModel!!.date = formatter2.format(currentTime).toString()
+                statusModel!!.status = Common.STATUS_FREE
+                statusModel!!.address = txtAddress_create!!.text.toString()
+                statusModel!!.description = txtDescriptio_create!!.text.toString()
+                statusModel!!.image = Common.IMG_FREE
+                statusModel!!.name = txtName_create!!.text.toString().toUpperCase()
+                statusModel!!.phone = txtPhone_create!!.text.toString()
+                statusModel!!.time = txtTime_create!!.text.toString()
+                Common.pickupSelected = statusModel
+                menuViewModel.setCreateModel(statusModel!!)
+                menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
+                    submitToFirebase(it)
+                })
+
+                menuViewModel.setCategoryList(statusModel)
+                menuViewModel.getCategoryList().observe(viewLifecycleOwner, Observer {
+                    displayInfo(it)
+                })
+            }else{
+                Toast.makeText(context,"NOT Create!! Make sure you entred all data",Toast.LENGTH_LONG).show()
+            }
         }
         val dialog = builder.create()
         dialog.show()

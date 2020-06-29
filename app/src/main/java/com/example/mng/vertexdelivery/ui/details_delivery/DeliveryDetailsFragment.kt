@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.mng.vertexdelivery.R
 import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.model.DeliveryModel
-import com.example.mng.vertexdelivery.model.PickUpModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.FirebaseDatabase
 import dmax.dialog.SpotsDialog
@@ -30,8 +29,9 @@ class DeliveryDetailsFragment : Fragment() {
 
     private lateinit var deliveryDetailsViewModel: DeliveryDetailsViewModel
 
-    private var name_details: TextView? = null
-    private var time_details: TextView? = null
+    private var shipperName_details: TextView? = null
+    private var invoiceNummber_details: TextView? = null
+    private var end_client_name_details: TextView? = null
     private var description_details: TextView? = null
     private var address_details: TextView? = null
     private var phone_details: TextView? = null
@@ -80,8 +80,9 @@ class DeliveryDetailsFragment : Fragment() {
     }
 
     private fun displayInfo(it: DeliveryModel?) {
-        name_details!!.text = StringBuilder(it!!.name!!)
-        time_details!!.text = StringBuilder(it!!.time!!)
+        shipperName_details!!.text = StringBuilder(it!!.shipper!!)
+        invoiceNummber_details!!.text = java.lang.StringBuilder(it!!.invoiceNumber!!)
+        end_client_name_details!!.text = StringBuilder(it!!.endClientName!!)
         description_details!!.text = StringBuilder(it!!.description!!)
         address_details!!.text = StringBuilder(it!!.address!!)
         phone_details!!.text = StringBuilder(it!!.phone!!)
@@ -152,8 +153,9 @@ class DeliveryDetailsFragment : Fragment() {
             SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
 
         btn_done_details = root!!.findViewById(R.id.btn_status_details_delivery) as Button
-        name_details = root!!.findViewById(R.id.delivery_name_details) as TextView
-        time_details = root!!.findViewById(R.id.time_details_delivery) as TextView
+        shipperName_details = root!!.findViewById(R.id.delivery_name_details) as TextView
+        invoiceNummber_details = root!!.findViewById(R.id.invoice_number_details_delivery)
+        end_client_name_details = root!!.findViewById(R.id.end_client_details_delivery) as TextView
         description_details = root!!.findViewById(R.id.txt_delivery_details_description) as TextView
         address_details = root!!.findViewById(R.id.address_details_delivery) as TextView
         phone_details = root!!.findViewById(R.id.phone_details_delivery) as TextView

@@ -12,7 +12,7 @@
         android:src="@drawable/ic_baseline_work_24"/>
 
     <TextView
-        android:id="@+id/txt_delivery_menu_name"
+        android:id="@+id/txt_delivery_menu_invoice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fontFamily="@font/brandon_medium"
@@ -21,14 +21,5 @@
         android:textColor="@android:color/black"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/txt_delivery_menu_time"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:fontFamily="@font/brandon_medium"
-        android:gravity="bottom|center_horizontal"
-        android:text="@string/delivery_categories"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="15sp" />
 
 </FrameLayout>
