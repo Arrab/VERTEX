@@ -37,7 +37,7 @@ class MenuPickUpFragment : Fragment() {
     private lateinit var menuViewModel: MenuPickUpViewModel
     private var adapter: PickUpCategoriesAdapter? = null
     private var recycle_menu_pickup_var: RecyclerView? = null
-    private var btn_create: FloatingActionButton? = null
+   // private var btn_create: FloatingActionButton? = null
 
     private var waitingDialog: AlertDialog? = null
 
@@ -68,10 +68,11 @@ class MenuPickUpFragment : Fragment() {
     }
 
     private fun initViews(root: View) {
-        waitingDialog =SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
+        waitingDialog =
+            SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
-        btn_create = root!!.findViewById(R.id.btn_pickup_menu_create) as FloatingActionButton
+        // btn_create = root!!.findViewById(R.id.btn_pickup_menu_create) as FloatingActionButton
         layoutAnimationController =
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         recycle_menu_pickup_var = root.findViewById(R.id.recycle_menu_pickup) as RecyclerView
@@ -82,95 +83,6 @@ class MenuPickUpFragment : Fragment() {
         recycle_menu_pickup_var!!.layoutManager = layoutManager
         recycle_menu_pickup_var!!.addItemDecoration(SpacesItemDecoration(8))
 
-        btn_create!!.setOnClickListener {
-            showDialogStatus(root)
-        }
-    }
-
-    private fun submitToFirebase(it: PickUpModel?) {
-        waitingDialog!!.show()
-        var count: Long = 0
-        val pickUpRef = FirebaseDatabase.getInstance().getReference(Common.PICKUP_REF)
-        pickUpRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                menuViewModel.onMenuPickUpLoadFaild(p0.message!!)
-            }
-            override fun onDataChange(p0: DataSnapshot) {
-                count = p0.childrenCount
-                it!!.task_id = count.toString()
-                val data2 = pickUpRef.child(it!!.task_id!!)
-                data2.child("address").setValue(it!!.address)
-                data2.child("date").setValue(it!!.date)
-                data2.child("dateOperation").setValue(it!!.dateOperation)
-                data2.child("description").setValue(it!!.description)
-                data2.child("image").setValue(it!!.image)
-                data2.child("name").setValue(it!!.name)
-                data2.child("phone").setValue(it!!.phone)
-                data2.child("status").setValue(it!!.status)
-                data2.child("task_id").setValue(it!!.task_id)
-                data2.child("time").setValue(it!!.time)
-                waitingDialog!!.dismiss()
-            }
-        })
-
-    }
-
-    @SuppressLint("NewApi")
-    private fun showDialogStatus(root: View) {
-        var builder = AlertDialog.Builder(requireContext())
-
-        val fromTimeZone =ZoneId.of("Africa/Cairo") //Zona horaria
-        val today = LocalDateTime.now() //fecha actual
-        val currentTime = today.atZone(fromTimeZone)
-        val DATE_FORMAT = "yyyy/MM/dd HH:mm:ss"
-        val DATE_FORMAT2 = "yyyy/MM/dd"
-        val formatter =DateTimeFormatter.ofPattern(DATE_FORMAT)
-        val formatter2 =DateTimeFormatter.ofPattern(DATE_FORMAT2)
-
-        builder.setTitle("Create new Task")
-
-        val itemView = LayoutInflater.from(context).inflate(R.layout.layout_pickup_create_task, null)
-        val txtName_create = itemView.findViewById<EditText>(R.id.txtName_pickup_create_task)
-        val txtAddress_create = itemView.findViewById<EditText>(R.id.txtAddress_pickup_create_task)
-        val txtPhone_create = itemView.findViewById<EditText>(R.id.txtphone_pickup_create_task)
-        val txtDescriptio_create = itemView.findViewById<EditText>(R.id.txtDescription_pickup_create_task)
-        val txtTime_create = itemView.findViewById<EditText>(R.id.txtTime_pickup_create_task)
-        builder.setView(itemView)
-        builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
-        builder.setPositiveButton("CREATE") { dialogInterface, i ->
-//            if (Common.pickupSelected == null) {
-//                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
-//            }
-            if (!TextUtils.isEmpty(txtName_create.text.toString()) && !TextUtils.isEmpty(txtTime_create.text.toString())
-                && !TextUtils.isEmpty(txtAddress_create.text.toString()) && !TextUtils.isEmpty(txtPhone_create.text.toString())
-                && !TextUtils.isEmpty(txtDescriptio_create.text.toString())) {
-
-                val statusModel: PickUpModel? = PickUpModel()
-                statusModel!!.dateOperation = formatter.format(currentTime).toString()
-                statusModel!!.date = formatter2.format(currentTime).toString()
-                statusModel!!.status = Common.STATUS_FREE
-                statusModel!!.address = txtAddress_create!!.text.toString()
-                statusModel!!.description = txtDescriptio_create!!.text.toString()
-                statusModel!!.image = Common.IMG_FREE
-                statusModel!!.name = txtName_create!!.text.toString().toUpperCase()
-                statusModel!!.phone = txtPhone_create!!.text.toString()
-                statusModel!!.time = txtTime_create!!.text.toString()
-                Common.pickupSelected = statusModel
-                menuViewModel.setCreateModel(statusModel!!)
-                menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
-                    submitToFirebase(it)
-                })
-
-                menuViewModel.setCategoryList(statusModel)
-                menuViewModel.getCategoryList().observe(viewLifecycleOwner, Observer {
-                    displayInfo(it)
-                })
-            }else{
-                Toast.makeText(context,"NOT Create!! Make sure you entred all data",Toast.LENGTH_LONG).show()
-            }
-        }
-        val dialog = builder.create()
-        dialog.show()
 
     }
 
