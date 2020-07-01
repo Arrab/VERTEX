@@ -53,7 +53,7 @@ object Common {
     val DELIVERY_REF: String = "DeliveryDevelop"
 
     val USER_REF: String = "User"
-    val USER_CATEGORY: String = "Admin"
+    val USER_CATEGORY: String = "Driver"
     var currentUser_id: String? = null
     var currentUser: UserModel? = null
 
