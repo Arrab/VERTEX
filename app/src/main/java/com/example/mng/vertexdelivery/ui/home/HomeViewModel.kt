@@ -91,12 +91,15 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
                 tempListUser.clear()
                 for (itemSnapshot in snapshot!!.children) {
                     val model = itemSnapshot.getValue<UserModel>(UserModel::class.java)
-                    if(model!!.user_id == Common.currentUser_id) {
+                    if(model!!.user_id == Common.currentUser_id && model!!.category == Common.USER_CATEGORY_ADMIN) {
                         tempListUser.add(model!!)
+                        Common.boolVar = true
                     }
                 }
-                Common.currentUser = tempListUser.get(0)
+                if (Common.boolVar)
+                    Common.currentUser = tempListUser.get(0)
                 userLoadCallbaclListener.onUserLoadSuccess(tempListUser)
+
             }
         })
     }

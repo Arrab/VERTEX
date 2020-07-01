@@ -55,7 +55,7 @@ class RegisterActivity : AppCompatActivity() {
         val lastName:String = txtLastName.text.toString()
         val email:String = txtEmail.text.toString()
         val password:String = txtPassword.text.toString()
-        val category:String = Common.USER_CATEGORY
+        val category:String = Common.USER_CATEGORY_ADMIN
 
         if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(lastName) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)){
             progressBar.visibility = View.VISIBLE

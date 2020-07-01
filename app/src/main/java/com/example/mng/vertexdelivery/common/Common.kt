@@ -53,9 +53,13 @@ object Common {
     val DELIVERY_REF: String = "DeliveryDevelop"
 
     val USER_REF: String = "User"
-    val USER_CATEGORY: String = "Admin"
+    val USER_CATEGORY_ADMIN: String = "Admin"
+    val USER_CATEGORY_DRIVER: String = "Driver"
     var currentUser_id: String? = null
     var currentUser: UserModel? = null
+    var userList: List<UserModel>? = null
+    var yaEntro = false
+    var boolVar = false
 
     var navlobal: NavigationView?= null
     var navControl: NavController?= null
