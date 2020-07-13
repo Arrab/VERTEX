@@ -4,19 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.example.mng.vertexdelivery.callback.IUserLoadCallback
 import com.example.mng.vertexdelivery.common.Common
-import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.UserModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class LoginActivity : AppCompatActivity() {
 
@@ -24,6 +19,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var txtPassword:EditText
     private lateinit var progressBar: ProgressBar
     private lateinit var auth:FirebaseAuth
+    private lateinit var userLoadCallbaclListener: IUserLoadCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

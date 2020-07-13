@@ -58,8 +58,8 @@ object Common {
     var currentUser_id: String? = null
     var currentUser: UserModel? = null
     var userList: List<UserModel>? = null
-    var yaEntro = false
     var boolVar = false
+    var intArraySpinner: Int?=null
 
     var navlobal: NavigationView?= null
     var navControl: NavController?= null

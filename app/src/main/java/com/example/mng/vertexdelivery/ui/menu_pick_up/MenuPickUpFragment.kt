@@ -9,10 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -24,6 +22,7 @@ import com.example.mng.vertexdelivery.adapters.PickUpCategoriesAdapter
 import com.example.mng.vertexdelivery.common.Common
 import com.example.mng.vertexdelivery.common.SpacesItemDecoration
 import com.example.mng.vertexdelivery.model.PickUpModel
+import com.example.mng.vertexdelivery.model.UserModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import dmax.dialog.SpotsDialog
@@ -38,6 +37,8 @@ class MenuPickUpFragment : Fragment() {
     private var adapter: PickUpCategoriesAdapter? = null
     private var recycle_menu_pickup_var: RecyclerView? = null
     private var btn_create: FloatingActionButton? = null
+    private var btn_delete: FloatingActionButton? = null
+
 
     private var waitingDialog: AlertDialog? = null
 
@@ -72,6 +73,7 @@ class MenuPickUpFragment : Fragment() {
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
         btn_create = root!!.findViewById(R.id.btn_pickup_menu_create) as FloatingActionButton
+        btn_delete = root!!.findViewById(R.id.btn_pickup_menu_delete) as FloatingActionButton
         layoutAnimationController =
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         recycle_menu_pickup_var = root.findViewById(R.id.recycle_menu_pickup) as RecyclerView
@@ -85,6 +87,20 @@ class MenuPickUpFragment : Fragment() {
         btn_create!!.setOnClickListener {
             showDialogStatus(root)
         }
+
+        btn_delete!!.setOnClickListener {
+            deletePickUp(root)
+        }
+    }
+
+    private fun deletePickUp(root: View) {
+        var builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Do you want to delete the task?")
+        builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
+        builder.setPositiveButton("OK") { dialogInterface, i ->
+
+        }
+
     }
 
     private fun submitToFirebase(it: PickUpModel?) {
@@ -99,6 +115,7 @@ class MenuPickUpFragment : Fragment() {
                 count = p0.childrenCount
                 it!!.task_id = count.toString()
                 val data2 = pickUpRef.child(it!!.task_id!!)
+                data2.child("user").setValue(it!!.user)
                 data2.child("address").setValue(it!!.address)
                 data2.child("date").setValue(it!!.date)
                 data2.child("dateOperation").setValue(it!!.dateOperation)
@@ -130,17 +147,44 @@ class MenuPickUpFragment : Fragment() {
         builder.setTitle("Create new Task")
 
         val itemView = LayoutInflater.from(context).inflate(R.layout.layout_pickup_create_task, null)
+        val spinner_users = itemView.findViewById<Spinner>(R.id.spinner_users) as Spinner
         val txtName_create = itemView.findViewById<EditText>(R.id.txtName_pickup_create_task)
         val txtAddress_create = itemView.findViewById<EditText>(R.id.txtAddress_pickup_create_task)
         val txtPhone_create = itemView.findViewById<EditText>(R.id.txtphone_pickup_create_task)
         val txtDescriptio_create = itemView.findViewById<EditText>(R.id.txtDescription_pickup_create_task)
         val txtTime_create = itemView.findViewById<EditText>(R.id.txtTime_pickup_create_task)
         builder.setView(itemView)
+        val options = listaDeUsuarios()
+        if (spinner_users != null) {
+            val adapter = ArrayAdapter<String>(
+                this!!.requireContext(),
+                android.R.layout.simple_spinner_item,
+                options
+            )
+            spinner_users.adapter = adapter
+            spinner_users.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    //
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    Common.intArraySpinner = position
+                }
+
+            }
+        }
         builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
         builder.setPositiveButton("CREATE") { dialogInterface, i ->
 //            if (Common.pickupSelected == null) {
 //                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
 //            }
+
+            val usuarioDriver = elegirUsuario(spinner_users)
             if (!TextUtils.isEmpty(txtName_create.text.toString()) && !TextUtils.isEmpty(txtTime_create.text.toString())
                 && !TextUtils.isEmpty(txtAddress_create.text.toString()) && !TextUtils.isEmpty(txtPhone_create.text.toString())
                 && !TextUtils.isEmpty(txtDescriptio_create.text.toString())) {
@@ -149,6 +193,7 @@ class MenuPickUpFragment : Fragment() {
                 statusModel!!.dateOperation = formatter.format(currentTime).toString()
                 statusModel!!.date = formatter2.format(currentTime).toString()
                 statusModel!!.status = Common.STATUS_FREE
+                statusModel!!.user = usuarioDriver
                 statusModel!!.address = txtAddress_create!!.text.toString()
                 statusModel!!.description = txtDescriptio_create!!.text.toString()
                 statusModel!!.image = Common.IMG_FREE
@@ -172,6 +217,24 @@ class MenuPickUpFragment : Fragment() {
         val dialog = builder.create()
         dialog.show()
 
+    }
+
+    private fun elegirUsuario(spinnerUsers: Spinner): UserModel {
+        var usr:UserModel?=null
+        for (p0 in Common.userList!!){
+            if (p0.name == listaDeUsuarios().get(Common.intArraySpinner!!)){
+                usr = p0
+           }
+        }
+        return usr!!
+    }
+
+    private fun listaDeUsuarios(): List<String> {
+        val result = ArrayList<String>()
+        for (p0 in Common.userList!!){
+            result.add(p0!!.name!!)
+        }
+        return result
     }
 
 
