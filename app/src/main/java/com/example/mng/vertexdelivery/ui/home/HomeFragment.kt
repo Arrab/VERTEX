@@ -26,6 +26,7 @@ import com.example.mng.vertexdelivery.model.DeliveryModel
 import com.example.mng.vertexdelivery.model.PickUpModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
+import java.net.CookieHandler
 
 class HomeFragment : Fragment() {
 
@@ -60,7 +61,12 @@ class HomeFragment : Fragment() {
         userViewActual.getUserActual().observe(viewLifecycleOwner, Observer {
             val intent = Intent(context, HomeActivity::class.java)
             homActivity.CargarDatosUsuario(intent)
+            if (!Common.boolVar){
+                Toast.makeText(context,"Access not allowed, you are NOT Admin!!",Toast.LENGTH_LONG).show()
+                startActivity(Intent(context,LoginActivity::class.java))
+            }
         })
+
 
         homeViewModel.getHomePickUpList().observe(viewLifecycleOwner, Observer {
             displayPickUpInfo(it)
@@ -132,6 +138,7 @@ class HomeFragment : Fragment() {
         val adapterDeliv = DeliveryAdapter(requireContext(),listDataDeliv!!)
         recyclerViewDeliv!!.adapter = adapterDeliv
         recyclerViewDeliv!!.layoutAnimation = layoutAnimationController
+
     }
 
     private fun initView(root:View) {
@@ -139,6 +146,7 @@ class HomeFragment : Fragment() {
         recycleView = root.findViewById(R.id.recycler_pickup) as RecyclerView
         recycleView!!.setHasFixedSize(true)
         recycleView!!.layoutManager = LinearLayoutManager(context,RecyclerView.HORIZONTAL, false)
+
     }
 
     private fun initViewDeliv(root:View) {
@@ -146,5 +154,6 @@ class HomeFragment : Fragment() {
         recyclerViewDeliv = root.findViewById(R.id.recycler_delivery) as RecyclerView
         recyclerViewDeliv!!.setHasFixedSize(true)
         recyclerViewDeliv!!.layoutManager = LinearLayoutManager(context,RecyclerView.HORIZONTAL, false)
+
     }
 }
