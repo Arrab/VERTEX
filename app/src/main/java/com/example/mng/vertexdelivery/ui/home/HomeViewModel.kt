@@ -79,9 +79,7 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
     }
 
     private fun loadUserList(){
-        var tempListUser = UserModel()
-        var listUseres = ArrayList<UserModel>()
-
+        val tempListUser = ArrayList<UserModel>()
         val userRef = FirebaseDatabase.getInstance().getReference(Common.USER_REF)
 
         userRef.addValueEventListener(object : ValueEventListener{
@@ -90,20 +88,15 @@ class HomeViewModel : ViewModel(), IPickUpLoadCallback, IDeliveryLoadCallback, I
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                listUseres.clear()
-                tempListUser = UserModel()
+                tempListUser.clear()
                 for (itemSnapshot in snapshot!!.children) {
                     val model = itemSnapshot.getValue<UserModel>(UserModel::class.java)
-                    listUseres.add(model!!)
-                    if(model!!.user_id == Common.currentUser_id && model!!.category == Common.USER_CATEGORY_ADMIN) {
-                        tempListUser = model!!
-                        Common.boolVar = true
+                    if(model!!.user_id == Common.currentUser_id) {
+                        tempListUser.add(model!!)
                     }
                 }
-                if (Common.boolVar)
-                    Common.currentUser = tempListUser
-                userLoadCallbaclListener.onUserLoadSuccess(listOf(tempListUser))
-                Common.userList = listUseres
+                Common.currentUser = tempListUser.get(0)
+                userLoadCallbaclListener.onUserLoadSuccess(tempListUser)
             }
         })
     }

@@ -11,7 +11,6 @@ class PickUpModel {
     var description: String? = null
     var date: String? = null
     var dateOperation: String? = null
-    var user: UserModel?= UserModel()
 
     constructor()
     constructor(
@@ -24,8 +23,7 @@ class PickUpModel {
         image: String?,
         description: String?,
         date: String?,
-        dateOperation: String?,
-        user: UserModel?
+        dateOperation: String?
     ) {
         this.task_id = task_id
         this.name = name
@@ -37,7 +35,6 @@ class PickUpModel {
         this.description = description
         this.date = date
         this.dateOperation = dateOperation
-        this.user = user
     }
 
     override fun equals(other: Any?): Boolean {
@@ -56,7 +53,6 @@ class PickUpModel {
         if (description != other.description) return false
         if (date != other.date) return false
         if (dateOperation != other.dateOperation) return false
-        if (user != other.user) return false
 
         return true
     }
@@ -72,13 +68,14 @@ class PickUpModel {
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (date?.hashCode() ?: 0)
         result = 31 * result + (dateOperation?.hashCode() ?: 0)
-        result = 31 * result + (user?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "PickUpModel(task_id=$task_id, name=$name, phone=$phone, address=$address, time=$time, status=$status, image=$image, description=$description, date=$date, dateOperation=$dateOperation, user=$user)"
+        return "PickUpModel(task_id=$task_id, name=$name, phone=$phone, address=$address, time=$time, status=$status, image=$image, description=$description, date=$date, dateOperation=$dateOperation)"
     }
+
+
 
 
 }
