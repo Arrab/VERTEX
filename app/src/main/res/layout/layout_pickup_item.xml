@@ -30,22 +30,5 @@
         android:text="@string/pickup_categories"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="15sp" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_pickup_menu_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_baseline_cancel_24"
-            android:tint="@android:color/white"/>
-    </LinearLayout>
-
-
 
 </FrameLayout>

@@ -37,7 +37,6 @@ class MenuPickUpFragment : Fragment() {
     private var adapter: PickUpCategoriesAdapter? = null
     private var recycle_menu_pickup_var: RecyclerView? = null
     private var btn_create: FloatingActionButton? = null
-    private var btn_delete: FloatingActionButton? = null
 
 
     private var waitingDialog: AlertDialog? = null
@@ -72,8 +71,7 @@ class MenuPickUpFragment : Fragment() {
         waitingDialog =SpotsDialog.Builder().setContext(requireContext()).setCancelable(false).build()
         dialog = SpotsDialog.Builder().setContext(context).setCancelable(false).build()
         dialog.show()
-        btn_create = root!!.findViewById(R.id.btn_pickup_menu_create) as FloatingActionButton
-        btn_delete = root!!.findViewById(R.id.btn_pickup_menu_delete) as FloatingActionButton
+        btn_create = root.findViewById(R.id.btn_pickup_menu_create) as FloatingActionButton
         layoutAnimationController =
             AnimationUtils.loadLayoutAnimation(context, R.anim.layout_item_from_left)
         recycle_menu_pickup_var = root.findViewById(R.id.recycle_menu_pickup) as RecyclerView
@@ -86,19 +84,6 @@ class MenuPickUpFragment : Fragment() {
 
         btn_create!!.setOnClickListener {
             showDialogStatus(root)
-        }
-
-        btn_delete!!.setOnClickListener {
-            deletePickUp(root)
-        }
-    }
-
-    private fun deletePickUp(root: View) {
-        var builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Do you want to delete the task?")
-        builder.setNegativeButton("CANCEL") { dialogInterface, i -> dialogInterface.dismiss() }
-        builder.setPositiveButton("OK") { dialogInterface, i ->
-
         }
 
     }
@@ -183,12 +168,10 @@ class MenuPickUpFragment : Fragment() {
 //            if (Common.pickupSelected == null) {
 //                Toast.makeText(context,"Error on Create PickUp",Toast.LENGTH_SHORT).show()
 //            }
-
             val usuarioDriver = elegirUsuario(spinner_users)
             if (!TextUtils.isEmpty(txtName_create.text.toString()) && !TextUtils.isEmpty(txtTime_create.text.toString())
                 && !TextUtils.isEmpty(txtAddress_create.text.toString()) && !TextUtils.isEmpty(txtPhone_create.text.toString())
                 && !TextUtils.isEmpty(txtDescriptio_create.text.toString())) {
-
                 val statusModel: PickUpModel? = PickUpModel()
                 statusModel!!.dateOperation = formatter.format(currentTime).toString()
                 statusModel!!.date = formatter2.format(currentTime).toString()
@@ -205,7 +188,6 @@ class MenuPickUpFragment : Fragment() {
                 menuViewModel.getMutableCreateLiveData().observe(viewLifecycleOwner, Observer {
                     submitToFirebase(it)
                 })
-
                 menuViewModel.setCategoryList(statusModel)
                 menuViewModel.getCategoryList().observe(viewLifecycleOwner, Observer {
                     displayInfo(it)
@@ -216,7 +198,6 @@ class MenuPickUpFragment : Fragment() {
         }
         val dialog = builder.create()
         dialog.show()
-
     }
 
     private fun elegirUsuario(spinnerUsers: Spinner): UserModel {
